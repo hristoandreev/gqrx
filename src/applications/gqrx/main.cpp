@@ -36,7 +36,7 @@
 #include <pulse/error.h>
 #include <pulse/simple.h>
 #endif
-
+#include <QFontDatabase>
 #include "mainwindow.h"
 #include "gqrx.h"
 
@@ -60,6 +60,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 #endif
     QLoggingCategory::setFilterRules("*.debug=false");
+
+    QFontDatabase::addApplicationFont(":/fonts/fonts/DS-DIGIB.TTF");
 
     QString plugin_path = QDir::cleanPath(QCoreApplication::applicationDirPath() + "/../soapy-modules");
     QFileInfo plugin_path_info(plugin_path);

@@ -723,6 +723,8 @@ bool MainWindow::loadConfig(const QString& cfgfile, bool check_crash,
 
     emit m_recent_config->configLoaded(m_settings->fileName());
 
+    ui->freqCtrl->setFont(QFont("DS-Digital", 9));
+
     return conf_ok;
 }
 

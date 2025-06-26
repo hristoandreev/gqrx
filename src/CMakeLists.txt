@@ -44,11 +44,13 @@ if(Qt6_FOUND)
     QT_ADD_RESOURCES(RESOURCES_LIST
         ../resources/icons.qrc
         ../resources/textfiles.qrc
+        ../resources/fonts.qrc
     )
 else()
     QT5_ADD_RESOURCES(RESOURCES_LIST
         ../resources/icons.qrc
         ../resources/textfiles.qrc
+        ../resources/fonts.qrc
     )
 endif()
 

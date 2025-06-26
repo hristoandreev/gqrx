@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>350</height>
+    <width>1920</width>
+    <height>1080</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>gqrx</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../resources/icons.qrc">
+   <iconset>
     <normaloff>:/icons/icons/gqrx.svg</normaloff>:/icons/icons/gqrx.svg</iconset>
   </property>
   <property name="dockOptions">
@@ -24,6 +24,9 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="spacing">
      <number>0</number>
@@ -42,11 +45,24 @@
     </property>
     <item>
      <widget class="QFrame" name="frame">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <bold>false</bold>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(31, 29, 29);</string>
@@ -101,6 +117,9 @@
            </item>
            <item>
             <widget class="CFreqCtrl" name="freqCtrl">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -109,9 +128,15 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>280</width>
-               <height>40</height>
+               <width>700</width>
+               <height>150</height>
               </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="toolTip">
               <string/>
@@ -213,6 +238,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="setMarkerButtonA">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -223,6 +251,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="clearMarkerButtonA">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -230,13 +261,16 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../resources/icons.qrc">
+               <iconset>
                 <normaloff>:/icons/icons/close.svg</normaloff>:/icons/icons/close.svg</iconset>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="markerLabelA">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -253,6 +287,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="setMarkerButtonB">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -263,6 +300,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="clearMarkerButtonB">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
@@ -270,13 +310,16 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../resources/icons.qrc">
+               <iconset>
                 <normaloff>:/icons/icons/close.svg</normaloff>:/icons/icons/close.svg</iconset>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="markerLabelB">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -306,6 +349,9 @@
             </item>
             <item>
              <widget class="QLabel" name="deltaFreqLabel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -349,6 +395,12 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -364,8 +416,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>35</height>
+     <width>1920</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -428,6 +480,9 @@
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="windowTitle">
     <string>Main toolbar</string>
    </property>
@@ -455,7 +510,7 @@
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <action name="actionQuit">
@@ -490,7 +545,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/play.svg</normaloff>:/icons/icons/play.svg</iconset>
    </property>
    <property name="text">
@@ -522,7 +577,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/clock.svg</normaloff>:/icons/icons/clock.svg</iconset>
    </property>
    <property name="text">
@@ -537,7 +592,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/flash.svg</normaloff>:/icons/icons/flash.svg</iconset>
    </property>
    <property name="text">
@@ -555,7 +610,7 @@
   </action>
   <action name="actionUserGroup">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/help.svg</normaloff>:/icons/icons/help.svg</iconset>
    </property>
    <property name="text">
@@ -570,7 +625,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/fullscreen.svg</normaloff>:/icons/icons/fullscreen.svg</iconset>
    </property>
    <property name="text">
@@ -585,7 +640,7 @@
   </action>
   <action name="actionLoadSettings">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/folder.svg</normaloff>:/icons/icons/folder.svg</iconset>
    </property>
    <property name="text">
@@ -603,7 +658,7 @@
   </action>
   <action name="actionSaveSettings">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/floppy.svg</normaloff>:/icons/icons/floppy.svg</iconset>
    </property>
    <property name="text">
@@ -621,7 +676,7 @@
   </action>
   <action name="actionAddBookmark">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/bookmark-new.svg</normaloff>:/icons/icons/bookmark-new.svg</iconset>
    </property>
    <property name="text">
@@ -642,7 +697,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/tangeo-network-idle.svg</normaloff>:/icons/icons/tangeo-network-idle.svg</iconset>
    </property>
    <property name="text">
@@ -657,7 +712,7 @@
   </action>
   <action name="actionRemoteConfig">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/settings.svg</normaloff>:/icons/icons/settings.svg</iconset>
    </property>
    <property name="text">
@@ -669,7 +724,7 @@
   </action>
   <action name="actionIqTool">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/signal.svg</normaloff>:/icons/icons/signal.svg</iconset>
    </property>
    <property name="text">
@@ -687,7 +742,7 @@
   </action>
   <action name="actionNews">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/info.svg</normaloff>:/icons/icons/info.svg</iconset>
    </property>
    <property name="text">
@@ -699,7 +754,7 @@
   </action>
   <action name="actionRemoteProtocol">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/info.svg</normaloff>:/icons/icons/info.svg</iconset>
    </property>
    <property name="text">
@@ -711,7 +766,7 @@
   </action>
   <action name="actionKbdShortcuts">
    <property name="icon">
-    <iconset resource="../../../resources/icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/info.svg</normaloff>:/icons/icons/info.svg</iconset>
    </property>
    <property name="text">
@@ -754,9 +809,7 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../../resources/icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionQuit</sender>
