@@ -160,7 +160,8 @@ int main(int argc, char *argv[])
 
         if (w.configOk)
         {
-            w.show();
+            //w.show();
+            w.showFullScreen();
             return_code = QApplication::exec();
         }
         else
