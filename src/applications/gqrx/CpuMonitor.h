@@ -1,7 +1,3 @@
-//
-// Created by wolfberry on 20/06/2025.
-//
-
 #pragma once
 
 #include <QObject>
@@ -21,53 +17,59 @@ public:
     }
 
     void startMonitoring() {
-        readCpuTimes(prevIdle, prevTotal);
-        timer->start(1000);  // всяка секунда
+        readCpuTimes();
+        timer->start(1000);
     }
 
 private:
     QTimer *timer;
-    quint64 prevIdle = 0, prevTotal = 0;
+    quint64 prevTotal = 0;
+    quint64 prevWork = 0;
 
-    void readCpuTimes(quint64 &idle, quint64 &total) {
+    void readCpuTimes() {
         QFile file("/proc/stat");
         if (file.open(QIODevice::ReadOnly)) {
-            QByteArray line = file.readLine();
-            QTextStream ts(line);
-            QString cpu;
-            quint64 user, nice, system, idleTime, iowait, irq, softirq, steal;
-            ts >> cpu >> user >> nice >> system >> idleTime >> iowait >> irq >> softirq >> steal;
+            QString line = file.readLine();
+            if (line.startsWith("cpu ")) {
+                QTextStream ts(&line);
+                QString cpu;
+                quint64 user, nice, system, idle, iowait, irq, softirq, steal;
+                
+                ts >> cpu >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal;
 
-            idle = idleTime + iowait;
-            total = user + nice + system + idle + irq + softirq + steal;
+                quint64 workTime = user + nice + system + irq + softirq + steal;
+
+                quint64 totalTime = workTime + idle + iowait;
+
+                if (prevTotal > 0) {
+                    quint64 totalDiff = totalTime - prevTotal;
+                    quint64 workDiff = workTime - prevWork;
+
+                    if (totalDiff > 0) {
+                        double cpuUsage = (workDiff * 100.0) / totalDiff;
+                        double smooth = exponentialSmoothing(cpuUsage);
+                        std::cout << "CPU usage: " << smooth << "%" << std::endl;
+                    }
+                }
+
+                prevTotal = totalTime;
+                prevWork = workTime;
+            }
         }
     }
 
-double exponentialSmoothing(double newValue) {
-    static double smoothedValue = 0.0;
-    const double alpha = 0.2;
-    
-    if (smoothedValue == 0.0) {
-        return smoothedValue = newValue;
+    double exponentialSmoothing(double newValue) {
+        static double smoothedValue = 0.0;
+        const double alpha = 0.3;
+        
+        if (smoothedValue == 0.0) {
+            return smoothedValue = newValue;
+        }
+        return smoothedValue = alpha * newValue + (1.0 - alpha) * smoothedValue;
     }
-    return smoothedValue = alpha * newValue + (1.0 - alpha) * smoothedValue;
-}
 
 private slots:
     void updateCpuUsage() {
-        quint64 idle, total;
-        readCpuTimes(idle, total);
-
-        quint64 deltaIdle = idle - prevIdle;
-        quint64 deltaTotal = total - prevTotal;
-
-        if (deltaTotal > 0) {
-            double usage = 100.0 * (1.0 - (double)deltaIdle / deltaTotal);
-            double smooth = exponentialSmoothing(usage);
-            std::cout << "CPU usage: " << smooth << "%" << std::endl;
-        }
-
-        prevIdle = idle;
-        prevTotal = total;
+        readCpuTimes();
     }
 };
