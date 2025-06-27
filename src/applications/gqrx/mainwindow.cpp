@@ -154,6 +154,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     Bookmarks::Get().setConfigDir(m_cfg_dir);
     BandPlan::Get().load();
     uiDockBookmarks = new DockBookmarks(this);
+    systemMonitor = new SystemMonitor();
 
     // setup some toggle view shortcuts
     uiDockInputCtl->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_J));
@@ -352,6 +353,16 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     connect(uiDockRDS, SIGNAL(radiotextChanged(QString)), remote, SLOT(setRdsRadiotext(QString)));
     connect(remote, SIGNAL(newAudioMuted(bool)), uiDockAudio, SLOT(setAudioMuted(bool)));
     connect(uiDockAudio, SIGNAL(audioMuted(bool)), remote, SLOT(setAudioMuted(bool)));
+    connect(systemMonitor, &SystemMonitor::cpuUsageUpdated, [this](double usage) {
+        //std::cout << "CPU Usage:" << usage << "%" << std::endl;
+        QString usage_str = QString::number(usage, 'f', 0);
+        ui->cpuUsage->setText(usage_str + "%");
+    });
+
+    connect(systemMonitor, &SystemMonitor::cpuTemperatureUpdated, [this](double temp) {
+        QString usage_str = QString::number(temp, 'f', 0);
+        ui->cpuTemp->setText(usage_str + "°C");
+    });
 
     rds_timer = new QTimer(this);
     connect(rds_timer, SIGNAL(timeout()), this, SLOT(rdsTimeout()));
@@ -398,7 +409,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
     qsvg_dummy = new QSvgWidget();
 
-    cpuMonitor.startMonitoring();
+    systemMonitor->startMonitoring();
 
     on_actionDSP_triggered(true);
 }

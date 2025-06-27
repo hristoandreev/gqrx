@@ -33,7 +33,7 @@
 #include <QFileDialog>
 #include <QSvgWidget>
 
-#include "CpuMonitor.h"
+#include "SystemMonitor.h"
 
 #include "qtgui/dockrxopt.h"
 #include "qtgui/dockaudio.h"
@@ -134,7 +134,7 @@ private:
     QSvgWidget      *qsvg_dummy;
 
     QFont font;
-    CpuMonitor cpuMonitor;
+    SystemMonitor *systemMonitor;
 
 private:
     void updateHWFrequencyRange(bool ignore_limits);

@@ -14,7 +14,7 @@
    <string>gqrx</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../../../resources/icons.qrc">
     <normaloff>:/icons/icons/gqrx.svg</normaloff>:/icons/icons/gqrx.svg</iconset>
   </property>
   <property name="dockOptions">
@@ -109,7 +109,7 @@
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>5</width>
+               <width>13</width>
                <height>15</height>
               </size>
              </property>
@@ -141,6 +141,9 @@
              <property name="toolTip">
               <string/>
              </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(51, 209, 122);</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -156,7 +159,7 @@
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>5</width>
+               <width>13</width>
                <height>15</height>
               </size>
              </property>
@@ -185,13 +188,39 @@
             </widget>
            </item>
            <item>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <widget class="QLabel" name="cpuUsage">
+               <property name="styleSheet">
+                <string notr="true">color: rgb(98, 160, 234);
+font: 800 20pt &quot;Ubuntu Sans&quot;;</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="cpuTemp">
+               <property name="styleSheet">
+                <string notr="true">color: rgb(98, 160, 234);
+font: 800 20pt &quot;Ubuntu Sans&quot;;</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <spacer name="horizontalSpacer_5">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>5</width>
+               <width>13</width>
                <height>15</height>
               </size>
              </property>
@@ -261,7 +290,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
+               <iconset resource="../../../resources/icons.qrc">
                 <normaloff>:/icons/icons/close.svg</normaloff>:/icons/icons/close.svg</iconset>
               </property>
              </widget>
@@ -310,7 +339,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
+               <iconset resource="../../../resources/icons.qrc">
                 <normaloff>:/icons/icons/close.svg</normaloff>:/icons/icons/close.svg</iconset>
               </property>
              </widget>
@@ -417,7 +446,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -545,7 +574,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/play.svg</normaloff>:/icons/icons/play.svg</iconset>
    </property>
    <property name="text">
@@ -577,7 +606,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/clock.svg</normaloff>:/icons/icons/clock.svg</iconset>
    </property>
    <property name="text">
@@ -592,7 +621,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/flash.svg</normaloff>:/icons/icons/flash.svg</iconset>
    </property>
    <property name="text">
@@ -610,7 +639,7 @@
   </action>
   <action name="actionUserGroup">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/help.svg</normaloff>:/icons/icons/help.svg</iconset>
    </property>
    <property name="text">
@@ -625,7 +654,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/fullscreen.svg</normaloff>:/icons/icons/fullscreen.svg</iconset>
    </property>
    <property name="text">
@@ -640,7 +669,7 @@
   </action>
   <action name="actionLoadSettings">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/folder.svg</normaloff>:/icons/icons/folder.svg</iconset>
    </property>
    <property name="text">
@@ -658,7 +687,7 @@
   </action>
   <action name="actionSaveSettings">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/floppy.svg</normaloff>:/icons/icons/floppy.svg</iconset>
    </property>
    <property name="text">
@@ -676,7 +705,7 @@
   </action>
   <action name="actionAddBookmark">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/bookmark-new.svg</normaloff>:/icons/icons/bookmark-new.svg</iconset>
    </property>
    <property name="text">
@@ -697,7 +726,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/tangeo-network-idle.svg</normaloff>:/icons/icons/tangeo-network-idle.svg</iconset>
    </property>
    <property name="text">
@@ -712,7 +741,7 @@
   </action>
   <action name="actionRemoteConfig">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/settings.svg</normaloff>:/icons/icons/settings.svg</iconset>
    </property>
    <property name="text">
@@ -724,7 +753,7 @@
   </action>
   <action name="actionIqTool">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/signal.svg</normaloff>:/icons/icons/signal.svg</iconset>
    </property>
    <property name="text">
@@ -742,7 +771,7 @@
   </action>
   <action name="actionNews">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/info.svg</normaloff>:/icons/icons/info.svg</iconset>
    </property>
    <property name="text">
@@ -754,7 +783,7 @@
   </action>
   <action name="actionRemoteProtocol">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/info.svg</normaloff>:/icons/icons/info.svg</iconset>
    </property>
    <property name="text">
@@ -766,7 +795,7 @@
   </action>
   <action name="actionKbdShortcuts">
    <property name="icon">
-    <iconset>
+    <iconset resource="../../../resources/icons.qrc">
      <normaloff>:/icons/icons/info.svg</normaloff>:/icons/icons/info.svg</iconset>
    </property>
    <property name="text">
@@ -809,7 +838,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../../resources/icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionQuit</sender>
