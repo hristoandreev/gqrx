@@ -524,6 +524,8 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
     systemMonitor->startMonitoring();
 
+    ui->plotter->enableBandPlan(true);
+
     on_actionDSP_triggered(true);
 }
 
@@ -1046,6 +1048,7 @@ void MainWindow::setNewFrequency(qint64 rx_freq)
     uiDockRxOpt->setHwFreq(d_hw_freq);
     ui->freqCtrl->setFrequency(rx_freq);
     uiDockBookmarks->setNewFrequency(rx_freq);
+    setNewFrequencyUpdate(rx_freq);
 }
 
 // Update delta and center (of marker span) when markers are updated
@@ -2693,4 +2696,25 @@ void MainWindow::toggleMarkers()
 {
     enableMarkers(!d_show_markers);
     uiDockFft->setMarkersEnabled(d_show_markers);
+}
+
+void MainWindow::setNewFrequencyUpdate(qint64 rx_freq) {
+    static QString currentModulation("");
+    static qint64  currentFilterWidth = 0;
+
+    BandInfo bandInfo = BandPlan::Get().getBandInfoForFreq(rx_freq);
+
+    if (bandInfo.minFrequency != 0 || bandInfo.maxFrequency != 0) {
+        if (!bandInfo.modulation.isEmpty() && currentModulation != bandInfo.modulation) {
+            currentModulation = bandInfo.modulation;
+            selectDemod(bandInfo.modulation);
+        }
+
+        if (bandInfo.filterWidth > 0 && bandInfo.filterWidth != currentFilterWidth) {
+            currentFilterWidth = bandInfo.filterWidth;
+            rx->set_filter((double) -bandInfo.filterWidth/2,
+                          (double) bandInfo.filterWidth/2,
+                          receiver::FILTER_SHAPE_NORMAL);
+        }
+    }
 }

@@ -87,9 +87,10 @@ bool BandPlan::load()
             info.minFrequency = strings[0].toLongLong();
             info.maxFrequency = strings[1].toLongLong();
             info.modulation   = strings[2].trimmed();
-            info.step         = strings[3].toInt();
-            info.color        = QColor(strings[4].trimmed());
-            info.name         = strings[5].trimmed();
+            info.filterWidth  = strings[3].toInt();
+            info.step         = strings[4].toInt();
+            info.color        = QColor(strings[5].trimmed());
+            info.name         = strings[6].trimmed();
 
             m_BandInfoList.append(info);
         }
@@ -120,4 +121,13 @@ QList<BandInfo> BandPlan::getBandsEncompassing(qint64 freq)
         found.append(m_BandInfoList[i]);
     }
     return found;
+}
+
+BandInfo BandPlan::getBandInfoForFreq(qint64 freq)
+{
+    QList<BandInfo> bands = getBandsEncompassing(freq);
+    if (bands.isEmpty())
+        return BandInfo();
+    
+    return bands.first();
 }

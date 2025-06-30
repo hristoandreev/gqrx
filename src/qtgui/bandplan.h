@@ -37,6 +37,7 @@ struct BandInfo
     qint64  maxFrequency;
     QString name;
     QString modulation;
+    qint64  filterWidth;
     qint64  step;
     QColor  color;
 
@@ -67,6 +68,7 @@ public:
     QList<BandInfo> getBandsEncompassing(qint64 freq);
 
     void setConfigDir(const QString&);
+    BandInfo getBandInfoForFreq(qint64 freq);
 
 private:
     BandPlan(); // Singleton Constructor is private.

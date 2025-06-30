@@ -65,6 +65,7 @@ public:
     bool loadConfig(const QString& cfgfile, bool check_crash, bool restore_mainwindow);
     bool saveConfig(const QString& cfgfile);
     void storeSession();
+    void setNewFrequencyUpdate(qint64 rx_freq);
 
     bool configOk; /*!< Main app uses this flag to know whether we should abort or continue. */
 
