@@ -1311,6 +1311,13 @@ void MainWindow::selectDemod(int mode_idx)
         uiDockAudio->setFftRange(0,1500);
         click_res = 10;
         break;
+    case DockRxOpt::MODE_DIGI_U:
+        /* DIGI_U */
+        rx->set_demod(receiver::RX_DEMOD_SSB);
+        ui->plotter->setDemodRanges(0, 5000, 100, 40000, false);
+        uiDockAudio->setFftRange(0,3000);
+        click_res = 100;
+        break;
 
     default:
         qDebug() << "Unsupported mode selection (can't happen!): " << mode_idx;

@@ -76,7 +76,9 @@ public:
         MODE_WFM_MONO   = 9, /*!< Broadcast FM (mono). */
         MODE_WFM_STEREO = 10, /*!< Broadcast FM (stereo). */
         MODE_WFM_STEREO_OIRT = 11, /*!< Broadcast FM (stereo oirt). */
-        MODE_LAST       = 12
+        MODE_DIGI_U = 12,
+        MODE_DIGI_L = 13,
+        MODE_LAST
     };
 
     explicit DockRxOpt(qint64 filterOffsetRange = 90000, QWidget *parent = 0);
