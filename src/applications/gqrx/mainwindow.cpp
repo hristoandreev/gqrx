@@ -522,6 +522,8 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
     qsvg_dummy = new QSvgWidget();
 
+    ui->freqCtrl->setDigitColor(QColor(0, 255, 0, 255));
+
     systemMonitor->startMonitoring();
 
     ui->plotter->enableBandPlan(true);
