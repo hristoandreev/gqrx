@@ -94,14 +94,14 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     setWindowTitle(QString("Gqrx %1").arg(VERSION));
 
     // Set fixed widths for labels so they don't move around when set
-    QFontMetrics metrics(font);
-    QRect markerRect = metrics.boundingRect("99,999,999.999 kHz");
-    ui->markerLabelA->setFixedWidth(markerRect.width());
-    ui->markerLabelB->setFixedWidth(markerRect.width());
-    QRect deltaFreqRect = metrics.boundingRect("Δ99,999,999.999 kHz   ⨏99,999,999.999 kHz");
-    ui->deltaFreqLabel->setFixedWidth(deltaFreqRect.width());
-    setMarkerA(MARKER_OFF);
-    setMarkerB(MARKER_OFF);
+    //QFontMetrics metrics(font);
+    //QRect markerRect = metrics.boundingRect("99,999,999.999 kHz");
+    //ui->markerLabelA->setFixedWidth(markerRect.width());
+    //ui->markerLabelB->setFixedWidth(markerRect.width());
+    //QRect deltaFreqRect = metrics.boundingRect("Δ99,999,999.999 kHz   ⨏99,999,999.999 kHz");
+    //ui->deltaFreqLabel->setFixedWidth(deltaFreqRect.width());
+    //setMarkerA(MARKER_OFF);
+    //setMarkerB(MARKER_OFF);
     d_show_markers = true;
 
     /* frequency control widget */
@@ -150,7 +150,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     uiDockAudio = new DockAudio();
     uiDockInputCtl = new DockInputCtl();
     uiDockFft = new DockFft();
-    BandPlan::Get().setConfigDir(m_cfg_dir);
+    //BandPlan::Get().setConfigDir(m_cfg_dir);
     Bookmarks::Get().setConfigDir(m_cfg_dir);
     BandPlan::Get().load();
     uiDockBookmarks = new DockBookmarks(this);
@@ -301,17 +301,17 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
        end up floating in their own top-level window and can not be
        docked to the mainwindow.
     */
-    addDockWidget(Qt::RightDockWidgetArea, uiDockInputCtl);
-    addDockWidget(Qt::RightDockWidgetArea, uiDockRxOpt);
-    addDockWidget(Qt::RightDockWidgetArea, uiDockFft);
-    tabifyDockWidget(uiDockInputCtl, uiDockRxOpt);
-    tabifyDockWidget(uiDockRxOpt, uiDockFft);
-    uiDockRxOpt->raise();
+    //addDockWidget(Qt::RightDockWidgetArea, uiDockInputCtl);
+    //addDockWidget(Qt::RightDockWidgetArea, uiDockRxOpt);
+    //addDockWidget(Qt::RightDockWidgetArea, uiDockFft);
+    //tabifyDockWidget(uiDockInputCtl, uiDockRxOpt);
+    //tabifyDockWidget(uiDockRxOpt, uiDockFft);
+    //uiDockRxOpt->raise();
 
-    addDockWidget(Qt::RightDockWidgetArea, uiDockAudio);
-    addDockWidget(Qt::RightDockWidgetArea, uiDockRDS);
-    tabifyDockWidget(uiDockAudio, uiDockRDS);
-    uiDockAudio->raise();
+    //addDockWidget(Qt::RightDockWidgetArea, uiDockAudio);
+    //addDockWidget(Qt::RightDockWidgetArea, uiDockRDS);
+    //tabifyDockWidget(uiDockAudio, uiDockRDS);
+    //uiDockAudio->raise();
 
     addDockWidget(Qt::BottomDockWidgetArea, uiDockBookmarks);
 
@@ -583,6 +583,20 @@ MainWindow::~MainWindow()
     delete rx;
     delete remote;
     delete qsvg_dummy;
+    delete rbModeRTTY;
+    delete rbModeWFM;
+    delete rbModeNFM;
+    delete rbModeLSB;
+    delete rbModeUSB;
+    delete rbModeDIGI_U;
+    delete rbModeDIGI_L;
+    delete rbModeCW_U;
+    delete rbModeCW_L;
+    delete rbModeSAM;
+    delete rbModeAM;
+    delete horizontalLayoutMode;
+    delete widget;
+    delete systemMonitor;
 }
 
 /**
@@ -1058,14 +1072,14 @@ void MainWindow::updateDeltaAndCenter()
 {
     if (d_marker_a != MARKER_OFF && d_marker_b != MARKER_OFF)
     {
-        qint64 delta = d_marker_b - d_marker_a;
-        qint64 center = (d_marker_a + d_marker_b) / 2;
-        ui->deltaFreqLabel->setText(QString("Δ%1 kHz   ⨏%2 kHz")
-                            .arg(locale().toString(delta/1.e3, 'f', 3))
-                            .arg(locale().toString(center/1.e3, 'f', 3)));
+        //qint64 delta = d_marker_b - d_marker_a;
+        //qint64 center = (d_marker_a + d_marker_b) / 2;
+        //ui->deltaFreqLabel->setText(QString("Δ%1 kHz   ⨏%2 kHz")
+        //                    .arg(locale().toString(delta/1.e3, 'f', 3))
+        //                    .arg(locale().toString(center/1.e3, 'f', 3)));
     }
     else {
-        ui->deltaFreqLabel->setText("");
+        //ui->deltaFreqLabel->setText("");
     }
 }
 
@@ -1075,10 +1089,10 @@ void MainWindow::setMarkerA(qint64 freq)
     d_marker_a = freq;
     if (freq != MARKER_OFF)
     {
-        ui->markerLabelA->setText(QString("%1 kHz").arg(locale().toString(freq/1.e3, 'f', 3)));
+        //ui->markerLabelA->setText(QString("%1 kHz").arg(locale().toString(freq/1.e3, 'f', 3)));
     }
     else {
-        ui->markerLabelA->setText("");
+        //ui->markerLabelA->setText("");
     }
     ui->plotter->setMarkers(d_marker_a, d_marker_b);
     updateDeltaAndCenter();
@@ -1089,10 +1103,10 @@ void MainWindow::setMarkerB(qint64 freq)
     d_marker_b = freq;
     if (freq != MARKER_OFF)
     {
-        ui->markerLabelB->setText(QString("%1 kHz").arg(locale().toString(freq/1.e3, 'f', 3)));
+        //ui->markerLabelB->setText(QString("%1 kHz").arg(locale().toString(freq/1.e3, 'f', 3)));
     }
     else {
-        ui->markerLabelB->setText("");
+        //ui->markerLabelB->setText("");
     }
     ui->plotter->setMarkers(d_marker_a, d_marker_b);
     updateDeltaAndCenter();
@@ -2691,7 +2705,7 @@ void MainWindow::rxOffsetZeroShortcut()
 void MainWindow::enableMarkers(bool enabled)
 {
     d_show_markers = enabled;
-    ui->markerFrame->setVisible(d_show_markers);
+    //ui->markerFrame->setVisible(d_show_markers);
 }
 
 void MainWindow::toggleMarkers()
