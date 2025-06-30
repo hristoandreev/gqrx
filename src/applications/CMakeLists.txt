@@ -15,6 +15,8 @@ add_source_files(SRCS_LIST
 	gqrx/recentconfig.h
 	gqrx/file_resources.cpp
 	gqrx/SystemMonitor.h
+	gqrx/SystemMonitor.cpp
+	gqrx/IconRadioButton.h
 )
 
 #######################################################################################################################
