@@ -63,6 +63,9 @@ void BandPlan::setConfigDir(const QString& cfg_dir)
 
 bool BandPlan::load()
 {
+    m_bandPlanFile = ":/textfiles/bandplan.csv";
+	std::cout << "BandPlanFile is " << m_bandPlanFile.toStdString() << std::endl;
+
     QFile file(m_bandPlanFile);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return false;
 
