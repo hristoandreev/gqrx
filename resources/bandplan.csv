@@ -1,114 +1,188 @@
-# minFrequency, maxFrequency, mode, step, color, name
+# minFrequency, maxFrequency, mode, filterWidth, step, color, name
 
-# USA Amateur Radio
-135700,       137800,       CW,  10, #90009470, 2200m Ham Band
-472000,       479000,       CW,  10, #90009470, 630m Ham Band
-1800000,      2000000,      CW,  10, #90009470, 160m Ham Band
-3500000,      3600000,      CW,  10, #90009470, 80m CW/Data Ham Band
-3600000,      4000000,      CW,  10, #90009470, 80m Phone Ham Band
-5351500,      5366500,      USB, 10, #90009470, 60m Ham Band
-7000000,      7125000,      CW,  10, #90009470, 40m CW/Data Ham Band
-7125000,      7300000,      LSB, 10, #90009470, 40m Phone Ham Band
-10100000,     10150000,     CW,  10, #90009470, 30m CW/Data Ham Band
-14000000,     14150000,     CW,  10, #90009470, 20m CW/Data Ham Band
-14150000,     14350000,     USB, 10, #90009470, 20m Phone Ham Band
-18068000,     18110000,     CW,  10, #90009470, 17m CW/Data Ham Band
-18110000,     18168000,     USB, 10, #90009470, 17m Ham Band
-21000000,     21200000,     CW,  10, #90009470, 15m CW/Data Ham Band
-21200000,     21450000,     USB, 10, #90009470, 15m Ham Band
-24890000,     24930000,     CW,  10, #90009470, 12m CW/Data Ham Band
-24930000,     24990000,     USB, 10, #90009470, 12m Ham Band
-28000000,     28300000,     CW,  10, #90009470, 10m CW/Data Ham Band
-28300000,     29700000,     USB, 10, #90009470, 10m Ham Band
-50000000,     50100000,     CW,  10, #90009470, 6m CW/Data Ham Band
-50100000,     54000000,     USB, 10, #90009470, 6m Ham Band
-144000000,    144100000,    CW,  10, #90009470, 2m CW/Data Ham Band
-144100000,    148000000,    NFM, 10, #90009470, 2m Ham Band
-222000000,    225000000,    NFM, 10, #90009470, 1.25m Ham Band
-420000000,    450000000,    NFM, 10, #90009470, 70cm Ham Band
-902000000,    928000000,    NFM, 10, #90009470, 33cm Ham Band
-1240000000,   1300000000,   NFM, 10, #90009470, 23cm Ham Band
-2300000000,   2310000000,   NFM, 10, #90009470, GHz Ham Band
-2390000000,   2450000000,   NFM, 10, #90009470, GHz Ham Band
-3300000000,   3500000000,   NFM, 10, #90009470, GHz Ham Band
-5650000000,   5925000000,   NFM, 10, #90009470, GHz Ham Band
-10000000000,  10500000000,  NFM, 10, #90009470, GHz Ham Band
-24000000000,  24250000000,  NFM, 10, #90009470, GHz Ham Band
-47000000000,  47200000000,  NFM, 10, #90009470, GHz Ham Band
-77000000000,  81000000000,  NFM, 10, #90009470, GHz Ham Band
-122250000000, 123000000000, NFM, 10, #90009470, GHz Ham Band
-134000000000, 141000000000, NFM, 10, #90009470, GHz Ham Band
-241000000000, 250000000000, NFM, 10, #90009470, GHz Ham Band
+# 2200m
+135700,       137800,       CW-L,  600, 10, #903232FF, 2200m Ham Band
 
-# Radionavigation - Source: https://www.ntia.doc.gov/files/ntia/publications/2003-allochrt.pdf
-9000,         14000,        USB, 10, #99AABD26, Radionavigation
-90000,        110000,       USB, 10, #99AABD26, Radionavigation
-190000,       200000,       USB, 10, #99C05017, Aeronautical Radionavigation
-200000,       275000,       USB, 10, #99C05017, Aeronautical Radionavigation
-275000,       285000,       USB, 10, #994C8E75, Maritime Radionavigation (Radio Beacons)
-275000,       285000,       USB, 10, #99C05017, Aeronautical Radionavigation
-285000,       300000,       USB, 10, #99C05017, Aeronautical Radionavigation (Radio Beacons)
-285000,       300000,       USB, 10, #994C8E75, Maritime Radionavigation (Radio Beacons)
-300000,       325000,       USB, 10, #99C05017, Aeronautical Radionavigation (Radio Beacons)
-300000,       325000,       USB, 10, #994C8E75, Maritime Radionavigation (Radio Beacons)
-325000,       335000,       USB, 10, #99C05017, Aeronautical Radionavigation (Radio Beacons)
-325000,       335000,       USB, 10, #994C8E75, Maritime Radionavigation (Radio Beacons)
-335000,       405000,       USB, 10, #99C05017, Aeronautical Radionavigation (Radio Beacons)
-405000,       415000,       USB, 10, #99AABD26, Radionavigation
-415000,       495000,       USB, 10, #99C05017, Aeronautical Radionavigation
-510000,       535000,       USB, 10, #99C05017, Aeronautical Radionavigation (Radio Beacons)
-74800000,     75200000,     USB, 10, #99C05017, Aeronautical Radionavigation
-328600000,    335400000,    USB, 10, #99C05017, Aeronautical Radionavigation
-399900000,    400050000,    USB, 10, #99E9EB7C, Radionavigation Satellite
-960000000,    1215000000,   USB, 10, #99C05017, Aeronautical Radionavigation
-1215000000,   1240000000,   USB, 10, #99E9EB7C, Radionavigation Satellite
-1300000000,   1350000000,   USB, 10, #99C05017, Aeronautical Radionavigation
-1559000000,   1610000000,   USB, 10, #99E9EB7C, Radionavigation Satellite (Space to Earth)
-1559000000,   1626500000,   USB, 10, #99C05017, Aeronautical Radionavigation
-2700000000,   2900000000,   USB, 10, #99C05017, Aeronautical Radionavigation
-2900000000,   3100000000,   USB, 10, #994C8E75, Maritime Radionavigation
-3500000000,   3650000000,   USB, 10, #99C05017, Aeronautical Radionavigation (Ground)
-4200000000,   4400000000,   USB, 10, #99C05017, Aeronautical Radionavigation
-5000000000,   5250000000,   USB, 10, #99C05017, Aeronautical Radionavigation
-5350000000,   5460000000,   USB, 10, #99C05017, Aeronautical Radionavigation
-5460000000,   5470000000,   USB, 10, #99AABD26, Radionavigation
-5470000000,   5650000000,   USB, 10, #994C8E75, Maritime Radionavigation
-9000000000,   9200000000,   USB, 10, #99C05017, Aeronautical Radionavigation
-9200000000,   9300000000,   USB, 10, #994C8E75, Maritime Radionavigation
-9300000000,   9500000000,   USB, 10, #99AABD26, Radionavigation
-13250000000,  13400000000,  USB, 10, #99C05017, Aeronautical Radionavigation
-14000000000,  14200000000,  USB, 10, #99AABD26, Radionavigation
-15400000000,  15700000000,  USB, 10, #99C05017, Aeronautical Radionavigation
-24450000000,  24650000000,  USB, 10, #99AABD26, Radionavigation
-24750000000,  25050000000,  USB, 10, #99AABD26, Radionavigation
-31800000000,  33400000000,  USB, 10, #99AABD26, Radionavigation
-45500000000,  47000000000,  USB, 10, #99E9EB7C, Radionavigation Satellite
-66000000000,  71000000000,  USB, 10, #99AABD26, Radionavigation
-66000000000,  71000000000,  USB, 10, #99E9EB7C, Radionavigation Satellite
-95000000000,  100000000000, USB, 10, #99AABD26, Radionavigation
-95000000000,  100000000000, USB, 10, #99E9EB7C, Radionavigation Satellite
-134000000000, 142000000000, USB, 10, #99E9EB7C, Radionavigation Satellite
-134000000000, 142000000000, USB, 10, #99AABD26, Radionavigation
-190000000000, 200000000000, USB, 10, #99E9EB7C, Radionavigation Satellite
-190000000000, 200000000000, USB, 10, #99AABD26, Radionavigation
-252000000000, 265000000000, USB, 10, #99E9EB7C, Radionavigation Satellite
-252000000000, 265000000000, USB, 10, #99AABD26, Radionavigation
+# LW
+148500,       283500,       AM-Sync,  8000, 10, #90DBFF32, LW Broadcast Radio
 
-# Broadcast
-54000000,  72000000,  AM,  10, #902E98BB, Broadcast Television
-76000000,  088000000, AM,  10, #902E98BB, Broadcast Television
-88000000,  108000000, WFM, 10, #902E98BB, Broadcast Radio
-174000000, 216000000, AM,  10, #902E98BB, Broadcast Television
-470000000, 512000000, AM,  10, #902E98BB, Broadcast Television
-512000000, 608000000, AM,  10, #902E98BB, Broadcast Television
-614000000, 698000000, AM,  10, #902E98BB, Broadcast Television
-698000000, 763000000, AM,  10, #902E98BB, Broadcast Television
+# MW
+526500,       1606500,      AM-Sync,  8000, 10, #90DBFF32, MW Broadcast Radio
 
-# Other
-108000000, 118000000, AM,   5000, #906600FF, Air Band VOR/ILS
-118000000, 137000000, AM,   5000, #900000FF, Air Band Voice
-26960000,   27410000, AM,   5000, #90FF0000, CB
-156000000, 162025000, NFM, 12500, #90000080, Marine
-225000000, 380000000, NFM, 12500, #90FF0000, Military Air
-240000000, 270000000, NFM, 12500, #90FF0000, Mil Sat
-446000000, 446200000, NFM,  6250, #9000FF00, PMR446
+# 160m
+1810000,      1838000,      CW-L,  600, 10, #903232FF, 160m Ham Band
+1838000,      1843000,      DIGI_U,  3000, 10, #90FF3232, 160m Ham Band
+1843000,      2000000,      LSB,  2700, 10, #9032EDFF, 160m Ham Band
+
+# 120m
+2300000,      2500000,      AM-Sync,  8000, 10, #90DBFF32, 120m Broadcast Radio
+
+# 90m
+3200000,      3400000,      AM-Sync,  8000, 10, #90DBFF32, 90m Broadcast Radio
+
+# 80m
+3500000,      3570000,      CW-L,  600, 10, #903232FF, 80m Ham Band
+3570000,      3600000,      DIGI_U,  3000, 10, #90FF3232, 80m Ham Band
+3600000,      3800000,      LSB,  2700, 10, #9032EDFF, 80m Ham Band
+
+# 75m
+3900000,      4000000,      AM-Sync,  8000, 10, #90DBFF32, 75m Broadcast Radio
+
+# 60m
+4700000,      5100000,      AM-Sync,  8000, 10, #90DBFF32, 60m Broadcast Radio
+
+# 60m
+5330500,      5357000,      USB,  2700, 10, #9032EDFF, 60m Ham Band
+5357000,      5360000,      DIGI_U,  3000, 10, #90FF3232, 60m Ham Band
+5360000,      5403500,      USB,  2700, 10, #9032EDFF, 60m Ham Band
+
+# 49m
+5800000,      6300000,      AM-Sync,  8000, 10, #90DBFF32, 49m Broadcast Radio
+
+# 40m
+7000000,      7040000,      CW-L,  600, 10, #903232FF, 40m Ham Band
+7040000,      7060000,      DIGI_U,  3000, 10, #90FF3232, 40m Ham Band
+7060000,      7074000,      LSB,  2700, 10, #9032EDFF, 40m Ham Band
+7074000,      7080000,      DIGI_U,  3000, 10, #90FF3232, 40m Ham Band
+7080000,      7200000,      LSB,  2700, 10, #9032EDFF, 40m Ham Band
+
+# 41m
+7200000,      7600000,      AM-Sync,  8000, 10, #90DBFF32, 41m Broadcast Radio
+
+# 31m
+9300000,      9995000,      AM-Sync,  8000, 10, #90DBFF32, 31m Broadcast Radio
+
+# 30m
+10100000,     10130000,     CW-L,  600, 10, #903232FF, 30m Ham Band
+10130000,     10150000,     DIGI_U,  3000, 10, #90FF3232, 30m Ham Band
+
+# 25m
+11500000,     12200000,     AM-Sync,  8000, 10, #90DBFF32, 25m Broadcast Radio
+
+# 22m
+13500000,     13900000,     AM-Sync,  8000, 10, #90DBFF32, 22m Broadcast Radio
+
+# 20m
+14000000,     14070000,     CW-L,  600, 10, #903232FF, 20m Ham Band
+14070000,     14112000,     DIGI_U,  3000, 10, #90FF3232, 20m Ham Band
+14112000,     14350000,     USB,  2700, 10, #9032EDFF, 20m Ham Band
+
+# 19m
+15000000,     15900000,     AM-Sync,  8000, 10, #90DBFF32, 19m Broadcast Radio
+
+# 16m
+17400000,     17995000,     AM-Sync,  8000, 10, #90DBFF32, 16m Broadcast Radio
+
+# 17m
+18068000,     18095000,     CW-L,  600, 10, #903232FF, 17m Ham Band
+18095000,     18120000,     DIGI_U,  3000, 10, #90FF3232, 17m Ham Band
+18120000,     18168000,     USB,  2700, 10, #9032EDFF, 17m Ham Band
+
+# 15m
+18800000,     19100000,     AM-Sync,  8000, 10, #90DBFF32, 15m Broadcast Radio
+
+# 15m
+21000000,     21070000,     CW-L,  600, 10, #903232FF, 15m Ham Band
+21070000,     21149000,     DIGI_U,  3000, 10, #90FF3232, 15m Ham Band
+21149000,     21450000,     USB,  2700, 10, #9032EDFF, 15m Ham Band
+
+# 13m
+21450000,     21995000,     AM-Sync,  8000, 10, #90DBFF32, 13m Broadcast Radio
+
+# 12m
+24890000,     24915000,     CW-L,  600, 10, #903232FF, 12m Ham Band
+24915000,     24940000,     DIGI_U,  3000, 10, #90FF3232, 12m Ham Band
+24940000,     24990000,     USB,  2700, 10, #9032EDFF, 12m Ham Band
+
+# 11m
+25500000,     26200000,     AM-Sync,  8000, 10, #90DBFF32, 11m Broadcast Radio
+
+# CB
+26900000,     27130000,    Narrow FM, 10000, 10, #90FF32D0, CB Ham Band
+27130000,     27140000,     AM,  8000, 10, #90DBFF32, CB Ham Band
+27140000,     27415000,    Narrow FM, 10000, 10, #90FF32D0, CB Ham Band
+27420000,     27995000,     USB,  2700, 10, #9032EDFF, CB Ham Band
+
+# 10m
+28000000,     28070000,     CW-L,  600, 10, #903232FF, 10m Ham Band
+28070000,     28190000,     DIGI_U,  3000, 10, #90FF3232, 10m Ham Band
+28190000,     28300000,     CW-L,  600, 10, #903232FF, 10m Ham Band
+28300000,     28320000,     DIGI_U,  3000, 10, #90FF3232, 10m Ham Band
+28320000,     29100000,     USB,  2700, 10, #9032EDFF, 10m Ham Band
+29100000,     29200000,     Narrow FM, 10000, 10, #90FF32D0, 10m Ham Band
+29200000,     29300000,     DIGI_U,  3000, 10, #90FF3232, 10m Ham Band
+29300000,     29520000,     USB,  2700, 10, #9032EDFF, 10m Ham Band
+29520000,     29700000,     Narrow FM, 10000, 10, #90FF32D0, 10m Ham Band
+
+# 6m
+50000000,     50100000,     CW-L,  600, 10, #903232FF, 6m Ham Band
+50100000,     50300000,     USB,  2700, 10, #9032EDFF, 6m Ham Band
+50300000,     50350000,     DIGI_U,  3000, 10, #90FF3232, 6m Ham Band
+50350000,     50600000,     USB,  2700, 10, #9032EDFF, 6m Ham Band
+50600000,     51000000,     DIGI_U,  3000, 10, #90FF3232, 6m Ham Band
+51000000,     51100000,     USB,  2700, 10, #9032EDFF, 6m Ham Band
+51100000,     54000000,     Narrow FM, 10000, 10, #90FF32D0, 6m Ham Band
+
+# 4m
+70000000,     70500000,     USB,  2700, 10, #9032EDFF, 4m Ham Band
+
+# FM
+70500000,     108000000,    WFM (stereo), 384000, 10, #90FF32D0, Broadcast Radio
+
+# AIR
+108000000,    137000000,    AM-Sync,   8000, 5000, #90DBFF32, Air Band
+
+# 2m
+144000000,    144110000,    CW-L,  600, 10, #903232FF, 2m Ham Band
+144110000,    144170000,    USB,  2700, 10, #9032EDFF, 2m Ham Band
+144170000,    144177000,    DIGI_U,  3000, 10, #90FF3232, 2m Ham Band
+144177000,    144360000,    USB,  2700, 10, #9032EDFF, 2m Ham Band
+144360000,    144363000,    DIGI_U,  3000, 10, #90FF3232, 2m Ham Band
+144363000,    144491000,    USB,  2700, 10, #9032EDFF, 2m Ham Band
+144491000,    146000000,    Narrow FM, 10000, 10, #90FF32D0, 2m Ham Band
+
+# Marine
+156000000,    174000000,    Narrow FM, 10000, 12500, #90FF32D0, Marine
+
+# 70cm
+430000000,    432000000,    Narrow FM, 10000, 10, #90FF32D0, 70cm Ham Band
+432000000,    432063000,    CW-L,  600, 10, #903232FF, 70cm Ham Band
+432063000,    432066000,    DIGI_U,  3000, 10, #90FF3232, 70cm Ham Band
+432066000,    432100000,    CW-L,  600, 10, #903232FF, 70cm Ham Band
+432100000,    432174000,    USB,  2700, 10, #9032EDFF, 70cm Ham Band
+432174000,    432177000,    DIGI_U,  3000, 10, #90FF3232, 70cm Ham Band
+432177000,    432300000,    USB,  2700, 10, #9032EDFF, 70cm Ham Band
+432300000,    432303000,    DIGI_U,  3000, 10, #90FF3232, 70cm Ham Band
+432303000,    432400000,    USB,  2700, 10, #9032EDFF, 70cm Ham Band
+432400000,    432500000,    CW-L,  600, 10, #903232FF, 70cm Ham Band
+432500000,    434000000,    Narrow FM, 10000, 10, #90FF32D0, 70cm Ham Band
+434000000,    434100000,    CW-L,  600, 10, #903232FF, 70cm Ham Band
+434100000,    446200000,    Narrow FM, 10000, 10, #90FF32D0, 70cm Ham Band
+
+# 23cm
+1260000000,   1270000000,   Narrow FM, 10000, 10, #90FF32D0, 23cm Ham Band
+1270000000,   1290994000,   Narrow FM, 10000, 10, #90FF32D0, 23cm Ham Band
+1290994000,   1291481000,   Narrow FM, 10000, 10, #90FF32D0, 23cm Ham Band
+1291481000,   1296000000,   Narrow FM, 10000, 10, #90FF32D0, 23cm Ham Band
+1296000000,   1296065000,   CW-L,  600, 10, #903232FF, 23cm Ham Band
+1296065000,   1296068000,   DIGI_U,  3000, 10, #90FF3232, 23cm Ham Band
+1296068000,   1296800000,   CW-L,  600, 10, #903232FF, 23cm Ham Band
+1296800000,   1296994000,   CW-L,  600, 10, #903232FF, 23cm Ham Band
+1296994000,   1297490000,   Narrow FM, 10000, 10, #90FF32D0, 23cm Ham Band
+1297490000,   1298000000,   Narrow FM, 10000, 10, #90FF32D0, 23cm Ham Band
+1298000000,   1300000000,   Narrow FM, 10000, 10, #90FF32D0, 23cm Ham Band
+
+# 13cm
+2320000000,   2320065000,   USB,  2700, 10, #9032EDFF, 13cm Ham Band
+2320065000,   2320068000,   DIGI_U,  3000, 10, #90FF3232, 13cm Ham Band
+2320068000,   2450000000,   USB,  2700, 10, #9032EDFF, 13cm Ham Band
+
+# 6cm
+5650000000,   5650065000,   CW-L,  600, 10, #903232FF, 6cm Ham Band
+5650065000,   5650068000,   DIGI_U,  3000, 10, #90FF3232, 6cm Ham Band
+5650068000,   5850000000,   CW-L,  600, 10, #903232FF, 6cm Ham Band
+
+# 3cm
+10000000000,  10368200000,  CW-L,  600, 10, #903232FF, 3cm Ham Band
+10368200000,  10368203000,  DIGI_U,  3000, 10, #90FF3232, 3cm Ham Band
+10368203000,  10489400000,  CW-L,  600, 10, #903232FF, 3cm Ham Band
