@@ -1011,7 +1011,7 @@ void CPlotter::resizeEvent(QResizeEvent* )
 
         // Use scaled system font
         m_Font = QFont();
-        m_Font.setPointSizeF(m_Font.pointSizeF() * m_DPR);
+        m_Font.setPointSizeF(m_Font.pointSizeF() * m_DPR * 2); // * 2 for bigger font and band map area height!
 
         // Higher resolution pixmaps are used with higher DPR. They are
         // rescaled in paintEvent().
