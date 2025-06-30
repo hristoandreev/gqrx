@@ -156,6 +156,119 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     uiDockBookmarks = new DockBookmarks(this);
     systemMonitor = new SystemMonitor();
 
+    widget = new QWidget(ui->frame);
+    widget->setObjectName("widget");
+    widget->setGeometry(QRect(420, 10, 1150, 50));
+    horizontalLayoutMode = new QHBoxLayout(widget);
+    horizontalLayoutMode->setSpacing(6);
+    horizontalLayoutMode->setContentsMargins(11, 11, 11, 11);
+    horizontalLayoutMode->setObjectName("horizontalLayoutMode");
+    horizontalLayoutMode->setContentsMargins(0, 0, 0, 0);
+
+    QFont font;
+    font.setFamily("Ubuntu Sans");
+    font.setPointSize(20);
+    font.setBold(true);
+
+    rbModeAM = new IconRadioButton(widget);
+    rbModeAM->setObjectName("rbModeAM");
+    rbModeAM->setIcons(QIcon(":/icons/icons/modeAM.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeAM->setText("AM");
+    rbModeAM->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeAM->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeAM);
+
+    rbModeSAM = new IconRadioButton(widget);
+    rbModeSAM->setObjectName("rbModeSAM");
+    rbModeSAM->setIcons(QIcon(":/icons/icons/modeAM.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeSAM->setText("SAM");
+    rbModeSAM->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeSAM->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeSAM);
+
+    rbModeCW_L = new IconRadioButton(widget);
+    rbModeCW_L->setObjectName("rbModeCW_L");
+    rbModeCW_L->setIcons(QIcon(":/icons/icons/modeCW.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeCW_L->setText("CW-L");
+    rbModeCW_L->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeCW_L->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeCW_L);
+
+    rbModeCW_U = new IconRadioButton(widget);
+    rbModeCW_U->setObjectName("rbModeCW_U");
+    rbModeCW_U->setIcons(QIcon(":/icons/icons/modeCW.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeCW_U->setText("CW-U");
+    rbModeCW_U->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeCW_U->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeCW_U);
+
+    rbModeDIGI_L = new IconRadioButton(widget);
+    rbModeDIGI_L->setObjectName("rbModeDIGI_L");
+    rbModeDIGI_L->setIcons(QIcon(":/icons/icons/modeDIGI.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeDIGI_L->setText("DIGI-L");
+    rbModeDIGI_L->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeDIGI_L->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeDIGI_L);
+
+    rbModeDIGI_U = new IconRadioButton(widget);
+    rbModeDIGI_U->setObjectName("rbModeDIGI_U");
+    rbModeDIGI_U->setIcons(QIcon(":/icons/icons/modeDIGI.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeDIGI_U->setText("DIGI-U");
+    rbModeDIGI_U->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeDIGI_U->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeDIGI_U);
+
+    rbModeUSB = new IconRadioButton(widget);
+    rbModeUSB->setObjectName("rbModeUSB");
+    rbModeUSB->setIcons(QIcon(":/icons/icons/modeSSB.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeUSB->setText("USB");
+    rbModeUSB->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeUSB->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeUSB);
+
+    rbModeLSB = new IconRadioButton(widget);
+    rbModeLSB->setObjectName("rbModeLSB");
+    rbModeLSB->setIcons(QIcon(":/icons/icons/modeSSB.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeLSB->setText("LSB");
+    rbModeLSB->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeLSB->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeLSB);
+
+    rbModeNFM = new IconRadioButton(widget);
+    rbModeNFM->setObjectName("rbModeNFM");
+    rbModeNFM->setIcons(QIcon(":/icons/icons/modeFM.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeNFM->setText("NFM");
+    rbModeNFM->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeNFM->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeNFM);
+
+    rbModeWFM = new IconRadioButton(widget);
+    rbModeWFM->setObjectName("rbModeWFM");
+    rbModeWFM->setIcons(QIcon(":/icons/icons/modeFM.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeWFM->setText("WFM");
+    rbModeWFM->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeWFM->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeWFM);
+
+    rbModeRTTY = new IconRadioButton(widget);
+    rbModeRTTY->setObjectName("rbModeRTTY");
+    rbModeRTTY->setIcons(QIcon(":/icons/icons/modeDIGI.svg"), QIcon(":/icons/icons/modeOFF.svg"), QSize(100, 50));
+    rbModeRTTY->setText("RTTY");
+    rbModeRTTY->setTextColors(QColor(0, 0, 0, 255), QColor(0x43, 0x43, 0x43, 0xFF));
+    rbModeRTTY->setFont(font);
+
+    horizontalLayoutMode->addWidget(rbModeRTTY);
+
     // setup some toggle view shortcuts
     uiDockInputCtl->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_J));
     uiDockRxOpt->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));

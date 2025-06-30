@@ -48,6 +48,7 @@
 #include "applications/gqrx/recentconfig.h"
 #include "applications/gqrx/remote_control.h"
 #include "applications/gqrx/receiver.h"
+#include "applications/gqrx/IconRadioButton.h"
 
 namespace Ui {
     class MainWindow;  /*! The main window UI */
@@ -135,6 +136,19 @@ private:
 
     QFont font;
     SystemMonitor *systemMonitor;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayoutMode;
+    IconRadioButton *rbModeAM;
+    IconRadioButton *rbModeSAM;
+    IconRadioButton *rbModeCW_L;
+    IconRadioButton *rbModeCW_U;
+    IconRadioButton *rbModeDIGI_L;
+    IconRadioButton *rbModeDIGI_U;
+    IconRadioButton *rbModeUSB;
+    IconRadioButton *rbModeLSB;
+    IconRadioButton *rbModeNFM;
+    IconRadioButton *rbModeWFM;
+    IconRadioButton *rbModeRTTY;
 
 private:
     void updateHWFrequencyRange(bool ignore_limits);
