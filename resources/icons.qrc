@@ -21,5 +21,11 @@
         <file>icons/signal.svg</file>
         <file>icons/tangeo-network-idle.svg</file>
         <file>icons/terminal.svg</file>
+        <file>icons/modeAM.svg</file>
+        <file>icons/modeCW.svg</file>
+        <file>icons/modeDIGI.svg</file>
+        <file>icons/modeFM.svg</file>
+        <file>icons/modeSSB.svg</file>
+        <file>icons/modeOFF.svg</file>
     </qresource>
 </RCC>
