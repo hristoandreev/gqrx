@@ -158,7 +158,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
     widget = new QWidget(ui->frame);
     widget->setObjectName("widget");
-    widget->setGeometry(QRect(420, 10, 1150, 50));
+    widget->setGeometry(QRect(420, 10, 1160, 50));
     horizontalLayoutMode = new QHBoxLayout(widget);
     horizontalLayoutMode->setSpacing(6);
     horizontalLayoutMode->setContentsMargins(11, 11, 11, 11);
@@ -275,7 +275,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     uiDockFft->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_F));
     uiDockAudio->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_A));
     uiDockBookmarks->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_B));
-    ui->mainToolBar->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_T));
+    //ui->mainToolBar->toggleViewAction()->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_T));
 
     /* frequency setting shortcut */
     auto *freq_shortcut = new QShortcut(QKeySequence(Qt::Key_F), this);
@@ -329,7 +329,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     ui->menu_View->addAction(uiDockFft->toggleViewAction());
     ui->menu_View->addAction(uiDockBookmarks->toggleViewAction());
     ui->menu_View->addSeparator();
-    ui->menu_View->addAction(ui->mainToolBar->toggleViewAction());
+    //ui->menu_View->addAction(ui->mainToolBar->toggleViewAction());
     ui->menu_View->addSeparator();
     ui->menu_View->addAction(ui->actionFullScreen);
 
@@ -554,10 +554,10 @@ MainWindow::~MainWindow()
         m_settings->setValue("crashed", false);
 
         // hide toolbar (default=false)
-        if (ui->mainToolBar->isHidden())
-            m_settings->setValue("gui/hide_toolbar", true);
-        else
-            m_settings->remove("gui/hide_toolbar");
+        //if (ui->mainToolBar->isHidden())
+        //    m_settings->setValue("gui/hide_toolbar", true);
+        //else
+        //    m_settings->remove("gui/hide_toolbar");
 
         m_settings->setValue("gui/geometry", saveGeometry());
         m_settings->setValue("gui/state", saveState());
@@ -676,9 +676,9 @@ bool MainWindow::loadConfig(const QString& cfgfile, bool check_crash,
     conv_ok = false;
 
     // hide toolbar
-    bool_val = m_settings->value("gui/hide_toolbar", false).toBool();
-    if (bool_val)
-        ui->mainToolBar->hide();
+    //bool_val = m_settings->value("gui/hide_toolbar", false).toBool();
+    //if (bool_val)
+    //    ui->mainToolBar->hide();
 
     // main window settings
     if (restore_mainwindow)
@@ -1719,14 +1719,14 @@ void MainWindow::startAudioRec(const QString& filename)
     }
     else if (rx->start_audio_recording(filename.toStdString()))
     {
-        ui->statusBar->showMessage(tr("Error starting audio recorder"));
+        //ui->statusBar->showMessage(tr("Error starting audio recorder"));
 
         /* reset state of record button */
         uiDockAudio->setAudioRecButtonState(false);
     }
     else
     {
-        ui->statusBar->showMessage(tr("Recording audio to %1").arg(filename));
+        //ui->statusBar->showMessage(tr("Recording audio to %1").arg(filename));
     }
 }
 
@@ -1736,13 +1736,13 @@ void MainWindow::stopAudioRec()
     if (rx->stop_audio_recording())
     {
         /* okay, this one would be weird if it really happened */
-        ui->statusBar->showMessage(tr("Error stopping audio recorder"));
+        //ui->statusBar->showMessage(tr("Error stopping audio recorder"));
 
         uiDockAudio->setAudioRecButtonState(true);
     }
     else
     {
-        ui->statusBar->showMessage(tr("Audio recorder stopped"), 5000);
+        //ui->statusBar->showMessage(tr("Audio recorder stopped"), 5000);
     }
 }
 
@@ -1752,14 +1752,14 @@ void MainWindow::startAudioPlayback(const QString& filename)
 {
     if (rx->start_audio_playback(filename.toStdString()))
     {
-        ui->statusBar->showMessage(tr("Error trying to play %1").arg(filename));
+        //ui->statusBar->showMessage(tr("Error trying to play %1").arg(filename));
 
         /* reset state of record button */
         uiDockAudio->setAudioPlayButtonState(false);
     }
     else
     {
-        ui->statusBar->showMessage(tr("Playing %1").arg(filename));
+        //ui->statusBar->showMessage(tr("Playing %1").arg(filename));
     }
 }
 
@@ -1769,13 +1769,13 @@ void MainWindow::stopAudioPlayback()
     if (rx->stop_audio_playback())
     {
         /* okay, this one would be weird if it really happened */
-        ui->statusBar->showMessage(tr("Error stopping audio playback"));
+        //ui->statusBar->showMessage(tr("Error stopping audio playback"));
 
         uiDockAudio->setAudioPlayButtonState(true);
     }
     else
     {
-        ui->statusBar->showMessage(tr("Audio playback stopped"), 5000);
+        //ui->statusBar->showMessage(tr("Audio playback stopped"), 5000);
     }
 }
 
@@ -1841,7 +1841,7 @@ void MainWindow::startIqRecording(const QString& recdir, const QString& format)
             metaFile.remove();
 
         // reset action status
-        ui->statusBar->showMessage(tr("Error starting I/Q recoder"));
+        //ui->statusBar->showMessage(tr("Error starting I/Q recoder"));
 
         // show an error message to user
         QMessageBox msg_box;
@@ -1853,8 +1853,8 @@ void MainWindow::startIqRecording(const QString& recdir, const QString& format)
     }
     else
     {
-        ui->statusBar->showMessage(tr("Recording I/Q data to: %1").arg(lastRec),
-                                   5000);
+        //ui->statusBar->showMessage(tr("Recording I/Q data to: %1").arg(lastRec),
+        //                           5000);
     }
 }
 
@@ -1863,10 +1863,10 @@ void MainWindow::stopIqRecording()
 {
     qDebug() << __func__;
 
-    if (rx->stop_iq_recording())
-        ui->statusBar->showMessage(tr("Error stopping I/Q recoder"));
-    else
-        ui->statusBar->showMessage(tr("I/Q data recoding stopped"), 5000);
+    //if (rx->stop_iq_recording())
+        //ui->statusBar->showMessage(tr("Error stopping I/Q recoder"));
+    //else
+        //ui->statusBar->showMessage(tr("I/Q data recoding stopped"), 5000);
 }
 
 void MainWindow::startIqPlayback(const QString& filename, float samprate, qint64 center_freq)
@@ -1908,7 +1908,7 @@ void MainWindow::startIqPlayback(const QString& filename, float samprate, qint64
     remote->setBandwidth(actual_rate);
 
     // FIXME: would be nice with good/bad status
-    ui->statusBar->showMessage(tr("Playing %1").arg(filename));
+    //ui->statusBar->showMessage(tr("Playing %1").arg(filename));
 
     on_actionDSP_triggered(true);
 }
@@ -1921,7 +1921,7 @@ void MainWindow::stopIqPlayback()
         on_actionDSP_triggered(false);
     }
 
-    ui->statusBar->showMessage(tr("I/Q playback stopped"), 5000);
+    //ui->statusBar->showMessage(tr("I/Q playback stopped"), 5000);
 
     // restore original input device
     auto indev = m_settings->value("input/device", "").toString();
@@ -2284,13 +2284,13 @@ void MainWindow::on_actionFullScreen_triggered(bool checked)
 {
     if (checked)
     {
-        ui->statusBar->hide();
-        showFullScreen();
+        //ui->statusBar->hide();
+        //showFullScreen();
     }
     else
     {
-        ui->statusBar->show();
-        showNormal();
+        //ui->statusBar->show();
+        //showNormal();
     }
 }
 
