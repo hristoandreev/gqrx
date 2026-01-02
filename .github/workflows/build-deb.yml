@@ -46,7 +46,8 @@ jobs:
 
       - name: Compute CI version
         run: |
-          VERSION="$(date -u +%Y%m%d%H%M)-g${GITHUB_SHA::7}"
+          SHORT_SHA="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
+          VERSION="$(date -u +%Y%m%d%H%M)-g${SHORT_SHA}"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           echo "CI Version: $VERSION"
 
