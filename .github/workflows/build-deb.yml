@@ -1,0 +1,147 @@
+name: Build Qt6 app (.deb) for Raspberry Pi OS (bookworm, arm64)
+
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # нужно за GitHub Release при tag; ако не го искаш, може да е read
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-24.04-arm
+    container: debian:bookworm
+
+    env:
+      # ====== НАСТРОЙ ТЕЗИ 2 ПОЛЕТА ======
+      APP_NAME: wolfberry-qtapp              # <- името на бинарника/target-а
+      PKGNAME: wolfberry-qtapp               # <- името на deb пакета (малки букви, без _)
+      # ====================================
+
+      SUITE: bookworm
+      ARCH: arm64
+      DEBIAN_FRONTEND: noninteractive
+      DEB_BUILD_OPTIONS: nocheck
+
+      # метаданни за changelog/control (по желание)
+      DEBFULLNAME: Wolfberry
+      DEBEMAIL: noreply@github.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build & packaging deps (Qt6 + debhelper)
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            ca-certificates git \
+            build-essential pkg-config \
+            cmake ninja-build \
+            qt6-base-dev qt6-base-dev-tools \
+            debhelper devscripts dpkg-dev fakeroot \
+            file
+
+      - name: Compute CI version
+        run: |
+          VERSION="$(date -u +%Y%m%d%H%M)-g${GITHUB_SHA::7}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "CI Version: $VERSION"
+
+      - name: Generate minimal debian/ packaging if missing
+        run: |
+          set -e
+          if [ -d debian ] && [ -f debian/control ]; then
+            echo "Found existing debian/ packaging. Will use it."
+            exit 0
+          fi
+
+          echo "No debian/ packaging found -> generating minimal debian/ (CMake + Qt6)."
+          mkdir -p debian/source
+
+          # NOTE: Ако ползваш допълнителни Qt6 модули, добави ги в Build-Depends (qt6-*-dev).
+          cat > debian/control <<EOF
+          Source: ${PKGNAME}
+          Section: utils
+          Priority: optional
+          Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
+          Build-Depends: debhelper-compat (= 13), cmake, ninja-build, pkg-config, qt6-base-dev
+          Standards-Version: 4.6.2
+          Rules-Requires-Root: no
+
+          Package: ${PKGNAME}
+          Architecture: ${ARCH}
+          Depends: \${shlibs:Depends}, \${misc:Depends}
+          Description: ${PKGNAME} (Qt6 app)
+           Qt6 C/C++ application packaged for Raspberry Pi OS (Debian bookworm).
+          EOF
+
+          cat > debian/rules <<'EOF'
+          #!/usr/bin/make -f
+          %:
+          	dh $@ --buildsystem=cmake
+
+          override_dh_auto_configure:
+          	dh_auto_configure -- \
+          	  -G Ninja \
+          	  -DCMAKE_BUILD_TYPE=Release \
+          	  -DCMAKE_INSTALL_PREFIX=/usr
+          EOF
+          chmod +x debian/rules
+
+          echo "3.0 (native)" > debian/source/format
+
+          # Minimal changelog (версията ще я зададем след малко)
+          cat > debian/changelog <<EOF
+          ${PKGNAME} (0.0.0) ${SUITE}; urgency=medium
+
+            * Initial CI package.
+
+           -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -u -R)
+          EOF
+
+      - name: Set debian/changelog version (CI)
+        run: |
+          # актуализира changelog версията към нашата CI VERSION
+          if command -v dch >/dev/null 2>&1; then
+            dch --distribution "$SUITE" --newversion "$VERSION" "CI build"
+          else
+            # fallback (рядко ще се случи, но да е здраво)
+            sed -i "1s/([^)]*)/($VERSION)/" debian/changelog
+          fi
+          head -n 5 debian/changelog
+
+      - name: Build .deb (dpkg-buildpackage)
+        run: |
+          set -e
+          dpkg-buildpackage -b -us -uc
+          mkdir -p dist
+
+          # .deb излиза в parent dir (..)
+          ls -la ..
+          cp -v ../${PKGNAME}_*_${ARCH}.deb dist/
+
+          # (по желание) качи и .buildinfo/.changes ако ги има
+          cp -v ../${PKGNAME}_*_${ARCH}.buildinfo dist/ 2>/dev/null || true
+          cp -v ../${PKGNAME}_*_${ARCH}.changes dist/ 2>/dev/null || true
+
+          echo "Built packages:"
+          ls -la dist
+          file dist/*.deb || true
+
+      - name: Upload artifact (.deb)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ env.PKGNAME }}-${{ env.VERSION }}
+          path: dist/*
+
+      - name: Create GitHub Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.deb
+            dist/*.buildinfo
+            dist/*.changes
