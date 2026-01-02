@@ -16,8 +16,8 @@ jobs:
 
     env:
       # ====== НАСТРОЙ ТЕЗИ 2 ПОЛЕТА ======
-      APP_NAME: wolfberry-qtapp              # <- името на бинарника/target-а
-      PKGNAME: wolfberry-qtapp               # <- името на deb пакета (малки букви, без _)
+      APP_NAME: gqrx              # <- името на бинарника/target-а
+      PKGNAME: gqrx               # <- името на deb пакета (малки букви, без _)
       # ====================================
 
       SUITE: bookworm
