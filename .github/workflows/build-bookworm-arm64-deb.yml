@@ -1,13 +1,12 @@
-name: Build gqrx (Qt6) .deb (bookworm, arm64) -> Release asset "bookworm/..."
+name: Build gqrx (Qt6) .deb (bookworm, arm64) -> artifact bookworm/...
 
 on:
   push:
     branches: ["main"]
-    tags: ["v*"]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -17,11 +16,11 @@ jobs:
     env:
       SUITE: bookworm
       ARCH: arm64
-      PKGNAME: gqrx
+      PKGNAME: gqrx-wolfberry
 
       DEBIAN_FRONTEND: noninteractive
       DEB_BUILD_OPTIONS: nocheck
-      DEBFULLNAME: gqrx
+      DEBFULLNAME: gqrx-wolfberry
       DEBEMAIL: noreply@github.com
 
     steps:
@@ -32,7 +31,8 @@ jobs:
         run: |
           apt-get update
           apt-get install -y --no-install-recommends \
-            ca-certificates git curl jq python3 \
+            ca-certificates git \
+            curl jq python3 \
             build-essential pkg-config \
             cmake ninja-build \
             debhelper devscripts dpkg-dev fakeroot \
@@ -42,88 +42,82 @@ jobs:
             libsoapysdr-dev soapysdr-tools soapysdr-module-all \
             libvolk2-dev libpulse-dev
 
-      - name: Compute DEB version
+      - name: Compute DEB version (monotonic)
         run: |
           set -e
-          if [ "${GITHUB_REF#refs/tags/}" != "$GITHUB_REF" ]; then
-            TAG="${GITHUB_REF#refs/tags/}"
-            UPSTREAM="${TAG#v}"
-            DEBVER="${UPSTREAM}-1"
-          else
-            SHORT_SHA="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
-            DEBVER="$(date -u +%Y%m%d%H%M)-g${SHORT_SHA}"
-          fi
+          SHORT_SHA="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
+          # валидна deb версия: започва с цифра + suite суфикс
+          DEBVER="$(date -u +%Y%m%d%H%M)-g${SHORT_SHA}~${SUITE}1"
           echo "DEBVER=$DEBVER" >> "$GITHUB_ENV"
           echo "DEBVER=$DEBVER"
 
-      - name: Generate minimal debian/ packaging (if missing) with Qt6 forced
+      - name: Ensure minimal debian/ packaging exists (Qt6 forced)
         run: |
           set -e
-          if [ -d debian ] && [ -f debian/control ]; then
-            echo "Found existing debian/ packaging. Will use it."
-            exit 0
+          if [ -d debian ] && [ -f debian/control ] && [ -f debian/rules ]; then
+            echo "Found existing debian/ packaging."
+          else
+            echo "Generating minimal debian/ packaging..."
+            mkdir -p debian/source
+
+            cat > debian/control <<EOF
+            Source: ${PKGNAME}
+            Section: hamradio
+            Priority: optional
+            Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
+            Build-Depends:
+             debhelper-compat (= 13),
+             cmake,
+             ninja-build,
+             pkg-config,
+             qt6-base-dev,
+             qt6-svg-dev,
+             libxkbcommon-dev,
+             gnuradio-dev,
+             gr-osmosdr,
+             libsoapysdr-dev,
+             libvolk2-dev,
+             libpulse-dev
+            Standards-Version: 4.6.2
+            Rules-Requires-Root: no
+            
+            Package: ${PKGNAME}
+            Architecture: ${ARCH}
+            Depends: \${shlibs:Depends}, \${misc:Depends}
+            Description: gqrx built with Qt6 (arm64, ${SUITE})
+             Custom build of gqrx with Qt6 for ${SUITE}.
+            EOF
+            
+                        cat > debian/rules <<'EOF'
+            #!/usr/bin/make -f
+            
+            %:
+            	dh $@ --buildsystem=cmake+ninja
+            
+            override_dh_auto_configure:
+            	dh_auto_configure -- \
+            	  -DCMAKE_BUILD_TYPE=Release \
+            	  -DCMAKE_INSTALL_PREFIX=/usr \
+            	  -DFORCE_QT6=ON \
+            	  -DFORCE_QT5=OFF \
+            	  -DLINUX_AUDIO_BACKEND=Pulseaudio
+            EOF
+            chmod +x debian/rules
+
+            echo "3.0 (native)" > debian/source/format
           fi
 
-          mkdir -p debian/source
-
-          cat > debian/control <<EOF
-          Source: ${PKGNAME}
-          Section: hamradio
-          Priority: optional
-          Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
-          Build-Depends:
-           debhelper-compat (= 13),
-           cmake,
-           ninja-build,
-           pkg-config,
-           qt6-base-dev,
-           qt6-svg-dev,
-           libxkbcommon-dev,
-           gnuradio-dev,
-           gr-osmosdr,
-           libsoapysdr-dev,
-           libvolk2-dev,
-           libpulse-dev
-          Standards-Version: 4.6.2
-          Rules-Requires-Root: no
-          
-          Package: ${PKGNAME}
-          Architecture: ${ARCH}
-          Depends: \${shlibs:Depends}, \${misc:Depends}
-          Description: gqrx built with Qt6 (arm64, ${SUITE})
-           Custom build of gqrx with Qt6 for Debian/Raspberry Pi OS (${SUITE}).
-          EOF
-          
-                    cat > debian/rules <<'EOF'
-          #!/usr/bin/make -f
-          
-          %:
-          	dh $@ --buildsystem=cmake+ninja
-          
-          override_dh_auto_configure:
-          	dh_auto_configure -- \
-          	  -DCMAKE_BUILD_TYPE=Release \
-          	  -DCMAKE_INSTALL_PREFIX=/usr \
-          	  -DFORCE_QT6=ON \
-          	  -DFORCE_QT5=OFF \
-          	  -DLINUX_AUDIO_BACKEND=Pulseaudio
-          EOF
-          chmod +x debian/rules
-
-          echo "3.0 (native)" > debian/source/format
-
-          cat > debian/changelog <<EOF
-          ${PKGNAME} (0.0.0) ${SUITE}; urgency=medium
-          
-          * Initial CI package.
-          
-          -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -u -R)
-          EOF
-
-      - name: Set changelog version (DEBVER)
+      - name: Create/Update debian/changelog (always valid)
         run: |
           set -e
-          dch --distribution "$SUITE" --newversion "$DEBVER" "CI build" || true
+          if [ ! -f debian/changelog ]; then
+            dch --create \
+              --package "$PKGNAME" \
+              --newversion "0.0.0" \
+              --distribution "$SUITE" \
+              "Initial CI package"
+          fi
+          dch --distribution "$SUITE" --newversion "$DEBVER" "CI build"
           head -n 5 debian/changelog
 
       - name: Build .deb
@@ -134,57 +128,17 @@ jobs:
           cp -v ../${PKGNAME}_*_${ARCH}.deb out/
           ls -la out
 
-      - name: Upload artifact (debug)
-        uses: actions/upload-artifact@v4
-        with:
-          name: deb-${{ env.SUITE }}-${{ env.PKGNAME }}-${{ env.DEBVER }}
-          path: out/*.deb
-
-      - name: Upload to GitHub Release as asset "bookworm/<file>.deb" (tags only)
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare artifact payload as "bookworm/<deb>.deb"
         run: |
           set -e
-          TAG="${GITHUB_REF#refs/tags/}"
-          OWNER_REPO="$GITHUB_REPOSITORY"
+          rm -rf "${SUITE}"
+          mkdir -p "${SUITE}"
+          cp -v out/*.deb "${SUITE}/"
+          ls -la "${SUITE}"
 
-          DEB_FILE="$(ls -1 out/*.deb | head -n1)"
-          BASE="$(basename "$DEB_FILE")"
-          ASSET_NAME="${SUITE}/${BASE}"   # <-- твоят формат
-          ASSET_LABEL="${SUITE}"          # fallback за агрегатора
-
-          # 1) Ensure release exists (ignore if already exists)
-          curl -fsSL -X POST \
-            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${OWNER_REPO}/releases" \
-            -d "{\"tag_name\":\"${TAG}\",\"name\":\"${TAG}\",\"draft\":false,\"prerelease\":false}" \
-            >/dev/null || true
-
-          # 2) Get upload_url
-          REL_JSON="$(curl -fsSL \
-            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${OWNER_REPO}/releases/tags/${TAG}")"
-
-          UPLOAD_URL="$(echo "$REL_JSON" | jq -r '.upload_url' | sed 's/{?name,label}//')"
-
-          # URL-encode name/label
-          NAME_ENC="$(python3 - <<PY
-            import urllib.parse
-            print(urllib.parse.quote("${ASSET_NAME}", safe=""))
-            PY
-            )"
-                      LABEL_ENC="$(python3 - <<PY
-            import urllib.parse
-            print(urllib.parse.quote("${ASSET_LABEL}", safe=""))
-          PY
-          )"
-
-          echo "Uploading asset name=${ASSET_NAME} label=${ASSET_LABEL}"
-          curl -fsSL -X POST \
-            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            -H "Content-Type: application/octet-stream" \
-            --data-binary @"${DEB_FILE}" \
-            "${UPLOAD_URL}?name=${NAME_ENC}&label=${LABEL_ENC}"
+      - name: Upload artifact (apt-bookworm-arm64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: apt-${{ env.SUITE }}-${{ env.ARCH }}
+          path: ${{ env.SUITE }}/*.deb
+          retention-days: 90
