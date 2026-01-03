@@ -40,7 +40,7 @@ jobs:
             libxkbcommon-dev \
             gnuradio-dev gr-osmosdr \
             libsoapysdr-dev soapysdr-tools soapysdr-module-all \
-            libvolk2-dev libpulse-dev
+            libvolk-dev libpulse-dev
 
       - name: Compute DEB version (monotonic)
         run: |
@@ -78,7 +78,7 @@ jobs:
            gnuradio-dev,
            gr-osmosdr,
            libsoapysdr-dev,
-           libvolk2-dev,
+           libvolk-dev,
            libpulse-dev
           Standards-Version: 4.6.2
           Rules-Requires-Root: no
