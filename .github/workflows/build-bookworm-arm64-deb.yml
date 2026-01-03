@@ -1,4 +1,4 @@
-name: Build gqrx (Qt6) .deb for Raspberry Pi OS (bookworm, arm64)
+name: Build gqrx (Qt6) + publish signed APT repo (bookworm/main, arm64)
 
 on:
   push:
@@ -6,29 +6,36 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-deb:
+  build-and-publish:
     runs-on: ubuntu-24.04-arm
     container: debian:bookworm
 
     env:
       SUITE: bookworm
+      COMP: main
       ARCH: arm64
-      # Име на deb пакета (препоръчвам да НЕ е "gqrx", за да не се бие с официалния)
-      PKGNAME: gqrx
+      PKGNAME: wolfberry-gqrx
+
       DEBIAN_FRONTEND: noninteractive
       DEB_BUILD_OPTIONS: nocheck
-      DEBFULLNAME: gqrx
+      DEBFULLNAME: wolfberry-gqrx
       DEBEMAIL: noreply@github.com
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install build deps (Qt6 + GNU Radio + packaging)
+      - name: Install build deps (Qt6 + GNU Radio + SoapySDR from APT + packaging + repo tools)
         run: |
           apt-get update
           apt-get install -y --no-install-recommends \
@@ -36,36 +43,14 @@ jobs:
             build-essential pkg-config \
             cmake ninja-build \
             debhelper devscripts dpkg-dev fakeroot \
+            gnupg apt-utils \
             qt6-base-dev qt6-base-dev-tools qt6-svg-dev \
+            libxkbcommon-dev \
             gnuradio-dev \
+            gr-osmosdr \
+            libsoapysdr-dev soapysdr-tools soapysdr-module-all \
             libvolk2-dev \
-            libpulse-dev \
-            python3-six \
-            gr-osmosdr
-
-      - name: Build ana install SoapySDR
-        run: |
-          git clone https://github.com/pothosware/SoapySDR.git
-          cd SoapySDR
-          git pull origin master
-          mkdir build
-          cd build
-          cmake ..
-          make -j`nproc`
-          make install -j`nproc`
-          ldconfig #needed on debian systems
-          SoapySDRUtil --info
-
-      #- name: Build ana install gr-osmosdr
-      #  run: |
-      #    git clone https://gitea.osmocom.org/sdr/gr-osmosdr
-      #    cd gr-osmosdr/
-      #    mkdir build
-      #    cd build/
-      #    cmake ../
-      #    make -j`nproc`
-      #    make install -j`nproc`
-      #    ldconfig
+            libpulse-dev
 
       - name: Compute CI version (POSIX-safe)
         run: |
@@ -97,7 +82,10 @@ jobs:
            pkg-config,
            qt6-base-dev,
            qt6-svg-dev,
+           libxkbcommon-dev,
            gnuradio-dev,
+           gr-osmosdr,
+           libsoapysdr-dev,
            libvolk2-dev,
            libpulse-dev
           Standards-Version: 4.6.2
@@ -145,19 +133,89 @@ jobs:
         run: |
           set -e
           dpkg-buildpackage -b -us -uc -j"$(nproc)"
-          mkdir -p dist
-          # .deb излиза една директория нагоре
-          cp -v ../${PKGNAME}_*_${ARCH}.deb dist/
-          ls -la dist
+          mkdir -p out
+          cp -v ../${PKGNAME}_*_${ARCH}.deb out/
+          ls -la out
 
-      - name: Upload artifact (.deb)
-        uses: actions/upload-artifact@v4
-        with:
-          name: deb-${{ env.PKGNAME }}-${{ env.VERSION }}
-          path: dist/*.deb
+      - name: Import signing key (base64)
+        env:
+          APT_GPG_PRIVATE_KEY_B64: ${{ secrets.APT_GPG_PRIVATE_KEY_B64 }}
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
 
-      - name: Create GitHub Release (tags only)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
+          if [ -z "$APT_GPG_PRIVATE_KEY_B64" ]; then
+            echo "ERROR: Secret APT_GPG_PRIVATE_KEY_B64 is empty/missing."
+            exit 1
+          fi
+
+          printf '%s' "$APT_GPG_PRIVATE_KEY_B64" | base64 -d | gpg --batch --import
+          KEYID="$(gpg --list-secret-keys --with-colons | awk -F: '/^sec/{print $5; exit}')"
+          if [ -z "$KEYID" ]; then
+            echo "ERROR: No secret key imported."
+            exit 1
+          fi
+          echo "SIGNING_KEYID=$KEYID" >> "$GITHUB_ENV"
+          gpg --list-secret-keys --keyid-format=long
+
+      - name: Build signed APT repo (dists/bookworm/main/...) for Pages
+        env:
+          APT_GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
+        run: |
+          set -e
+
+          rm -rf public
+          mkdir -p "public/pool/${COMP}"
+          mkdir -p "public/dists/${SUITE}/${COMP}/binary-${ARCH}"
+
+          # 1) .deb в pool
+          cp -v out/*.deb "public/pool/${COMP}/"
+
+          # 2) (по желание) публикувай публичния ключ за клиентите
+          # Файлът repo-key.asc трябва да е commit-нат в репото (публичен ключ)
+          if [ -f repo-key.asc ]; then
+            cp -v repo-key.asc public/repo-key.asc
+          fi
+
+          # 3) Packages + Packages.gz
+          cd public
+          dpkg-scanpackages -m "pool/${COMP}" /dev/null > "dists/${SUITE}/${COMP}/binary-${ARCH}/Packages"
+          gzip -9fk "dists/${SUITE}/${COMP}/binary-${ARCH}/Packages"
+
+          # 4) Release за suite
+          cat > apt-ftparchive.conf <<EOF
+          APT::FTPArchive::Release::Origin "Wolfberry";
+          APT::FTPArchive::Release::Label "Wolfberry APT";
+          APT::FTPArchive::Release::Suite "${SUITE}";
+          APT::FTPArchive::Release::Codename "${SUITE}";
+          APT::FTPArchive::Release::Architectures "${ARCH}";
+          APT::FTPArchive::Release::Components "${COMP}";
+          APT::FTPArchive::Release::Description "Wolfberry gqrx repo";
+          EOF
+
+          apt-ftparchive -c apt-ftparchive.conf release "dists/${SUITE}" > "dists/${SUITE}/Release"
+
+          # 5) Подписи: InRelease + Release.gpg
+          gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "$APT_GPG_PASSPHRASE" \
+            --default-key "$SIGNING_KEYID" \
+            --digest-algo SHA256 \
+            --clearsign -o "dists/${SUITE}/InRelease" "dists/${SUITE}/Release"
+
+          gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "$APT_GPG_PASSPHRASE" \
+            --default-key "$SIGNING_KEYID" \
+            --digest-algo SHA256 \
+            -abs -o "dists/${SUITE}/Release.gpg" "dists/${SUITE}/Release"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          files: dist/*.deb
+          path: public
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        
