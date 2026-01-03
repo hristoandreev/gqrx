@@ -82,32 +82,32 @@ jobs:
            libpulse-dev
           Standards-Version: 4.6.2
           Rules-Requires-Root: no
-          
+
           Package: ${PKGNAME}
           Architecture: ${ARCH}
           Depends: \${shlibs:Depends}, \${misc:Depends}
-          Description: gqrx built with Qt6 (arm64, ${SUITE})
-           Custom build of gqrx with Qt6 for ${SUITE}.
+          Description: gqrx built with Qt6 (arm64, bookworm)
+           Custom build of gqrx with Qt6 for Raspberry Pi OS (Bookworm).
           EOF
-          
+
           cat > debian/rules <<'EOF'
           #!/usr/bin/make -f
-          
+
           %:
-            dh $@ --buildsystem=cmake+ninja
-          
+          	dh $@ --buildsystem=cmake+ninja
+
           override_dh_auto_configure:
-            dh_auto_configure -- \
-              -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_INSTALL_PREFIX=/usr \
-              -DFORCE_QT6=ON \
-              -DFORCE_QT5=OFF \
-              -DLINUX_AUDIO_BACKEND=Pulseaudio
+          	dh_auto_configure -- \
+          	  -DCMAKE_BUILD_TYPE=Release \
+          	  -DCMAKE_INSTALL_PREFIX=/usr \
+          	  -DFORCE_QT6=ON \
+          	  -DFORCE_QT5=OFF \
+          	  -DLINUX_AUDIO_BACKEND=Pulseaudio
           EOF
           chmod +x debian/rules
 
           echo "3.0 (native)" > debian/source/format
-
+          
       - name: Create/Update debian/changelog (always valid)
         run: |
           set -e
