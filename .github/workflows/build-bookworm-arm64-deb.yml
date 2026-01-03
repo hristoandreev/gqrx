@@ -128,6 +128,36 @@ jobs:
           mkdir -p out
           cp -v ../${PKGNAME}_*_${ARCH}.deb out/
           ls -la out
+          
+      - name: Inspect produced .deb
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== out directory ==="
+          ls -lah out || true
+
+          DEB="$(ls -1 out/*.deb | head -n1)"
+          echo "DEB: $DEB"
+
+          echo "=== dpkg-deb -I (metadata) ==="
+          dpkg-deb -I "$DEB" | sed -n '1,200p'
+
+          echo "=== dpkg-deb -c (file list, first 200) ==="
+          dpkg-deb -c "$DEB" | sed -n '1,200p'
+
+          echo "=== check for /usr/bin/gqrx ==="
+          dpkg-deb -c "$DEB" | awk '{print $6}' | grep -E '^\.?/usr/bin/gqrx$' || \
+            echo "WARN: /usr/bin/gqrx not found in package!"
+
+      - name: Show changelog header + rules (tabs)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== debian/changelog head ==="
+          head -n 15 debian/changelog || true
+
+          echo "=== debian/rules (tabs show as ^I) ==="
+          sed -n '1,80p' debian/rules | cat -A
 
       - name: Prepare artifact payload as "bookworm/<deb>.deb"
         run: |
