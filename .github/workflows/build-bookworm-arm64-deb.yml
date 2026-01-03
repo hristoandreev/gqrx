@@ -40,7 +40,8 @@ jobs:
             gnuradio-dev \
             libvolk2-dev \
             libpulse-dev \
-            python3-six
+            python3-six \
+            gr-osmosdr
 
       - name: Build ana install SoapySDR
         run: |
@@ -55,16 +56,16 @@ jobs:
           ldconfig #needed on debian systems
           SoapySDRUtil --info
 
-      - name: Build ana install gr-osmosdr
-        run: |
-          git clone https://gitea.osmocom.org/sdr/gr-osmosdr
-          cd gr-osmosdr/
-          mkdir build
-          cd build/
-          cmake ../
-          make -j`nproc`
-          make install -j`nproc`
-          ldconfig
+      #- name: Build ana install gr-osmosdr
+      #  run: |
+      #    git clone https://gitea.osmocom.org/sdr/gr-osmosdr
+      #    cd gr-osmosdr/
+      #    mkdir build
+      #    cd build/
+      #    cmake ../
+      #    make -j`nproc`
+      #    make install -j`nproc`
+      #    ldconfig
 
       - name: Compute CI version (POSIX-safe)
         run: |
