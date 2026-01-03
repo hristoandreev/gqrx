@@ -113,11 +113,11 @@ jobs:
           echo "3.0 (native)" > debian/source/format
 
           cat > debian/changelog <<EOF
-            ${PKGNAME} (0.0.0) ${SUITE}; urgency=medium
+          ${PKGNAME} (0.0.0) ${SUITE}; urgency=medium
           
-            * Initial CI package.
+          * Initial CI package.
           
-           -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -u -R)
+          -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -u -R)
           EOF
 
       - name: Set changelog version (DEBVER)
