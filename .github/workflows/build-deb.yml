@@ -38,7 +38,6 @@ jobs:
             debhelper devscripts dpkg-dev fakeroot \
             qt6-base-dev qt6-base-dev-tools qt6-svg-dev \
             gnuradio-dev \
-            libgnuradio-osmosdr-dev \
             libvolk2-dev \
             libpulse-dev
 
