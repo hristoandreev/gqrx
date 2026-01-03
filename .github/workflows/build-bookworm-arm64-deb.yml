@@ -1,4 +1,4 @@
-name: Build gqrx (Qt6) + publish signed APT repo (bookworm/main, arm64)
+name: Build gqrx (Qt6) .deb (bookworm, arm64) -> Release asset "bookworm/..."
 
 on:
   push:
@@ -6,58 +6,55 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-24.04-arm
     container: debian:bookworm
 
     env:
       SUITE: bookworm
-      COMP: main
       ARCH: arm64
-      PKGNAME: wolfberry-gqrx
+      PKGNAME: gqrx
 
       DEBIAN_FRONTEND: noninteractive
       DEB_BUILD_OPTIONS: nocheck
-      DEBFULLNAME: wolfberry-gqrx
+      DEBFULLNAME: gqrx
       DEBEMAIL: noreply@github.com
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install build deps (Qt6 + GNU Radio + SoapySDR from APT + packaging + repo tools)
+      - name: Install build deps (Qt6 + GNU Radio + SoapySDR from APT + packaging)
         run: |
           apt-get update
           apt-get install -y --no-install-recommends \
-            ca-certificates git \
+            ca-certificates git curl jq python3 \
             build-essential pkg-config \
             cmake ninja-build \
             debhelper devscripts dpkg-dev fakeroot \
-            gnupg apt-utils \
             qt6-base-dev qt6-base-dev-tools qt6-svg-dev \
             libxkbcommon-dev \
-            gnuradio-dev \
-            gr-osmosdr \
+            gnuradio-dev gr-osmosdr \
             libsoapysdr-dev soapysdr-tools soapysdr-module-all \
-            libvolk2-dev \
-            libpulse-dev
+            libvolk2-dev libpulse-dev
 
-      - name: Compute CI version (POSIX-safe)
+      - name: Compute DEB version
         run: |
-          SHORT_SHA="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
-          VERSION="$(date -u +%Y%m%d%H%M)-g${SHORT_SHA}"
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
-          echo "CI Version: $VERSION"
+          set -e
+          if [ "${GITHUB_REF#refs/tags/}" != "$GITHUB_REF" ]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+            UPSTREAM="${TAG#v}"
+            DEBVER="${UPSTREAM}-1"
+          else
+            SHORT_SHA="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
+            DEBVER="$(date -u +%Y%m%d%H%M)-g${SHORT_SHA}"
+          fi
+          echo "DEBVER=$DEBVER" >> "$GITHUB_ENV"
+          echo "DEBVER=$DEBVER"
 
       - name: Generate minimal debian/ packaging (if missing) with Qt6 forced
         run: |
@@ -67,7 +64,6 @@ jobs:
             exit 0
           fi
 
-          echo "No debian/ packaging found -> generating minimal debian/ (Qt6 forced)."
           mkdir -p debian/source
 
           cat > debian/control <<EOF
@@ -90,20 +86,20 @@ jobs:
            libpulse-dev
           Standards-Version: 4.6.2
           Rules-Requires-Root: no
-
+          
           Package: ${PKGNAME}
           Architecture: ${ARCH}
           Depends: \${shlibs:Depends}, \${misc:Depends}
-          Description: gqrx built with Qt6 (arm64, bookworm)
-           Custom build of gqrx with Qt6 for Raspberry Pi OS (Bookworm).
+          Description: gqrx built with Qt6 (arm64, ${SUITE})
+           Custom build of gqrx with Qt6 for Debian/Raspberry Pi OS (${SUITE}).
           EOF
-
-          cat > debian/rules <<'EOF'
+          
+                    cat > debian/rules <<'EOF'
           #!/usr/bin/make -f
-
+          
           %:
           	dh $@ --buildsystem=cmake+ninja
-
+          
           override_dh_auto_configure:
           	dh_auto_configure -- \
           	  -DCMAKE_BUILD_TYPE=Release \
@@ -117,16 +113,17 @@ jobs:
           echo "3.0 (native)" > debian/source/format
 
           cat > debian/changelog <<EOF
-          ${PKGNAME} (0.0.0) ${SUITE}; urgency=medium
-
+            ${PKGNAME} (0.0.0) ${SUITE}; urgency=medium
+          
             * Initial CI package.
-
+          
            -- ${DEBFULLNAME} <${DEBEMAIL}>  $(date -u -R)
           EOF
 
-      - name: Set debian/changelog version (CI)
+      - name: Set changelog version (DEBVER)
         run: |
-          dch --distribution "$SUITE" --newversion "$VERSION" "CI build" || true
+          set -e
+          dch --distribution "$SUITE" --newversion "$DEBVER" "CI build" || true
           head -n 5 debian/changelog
 
       - name: Build .deb
@@ -137,85 +134,57 @@ jobs:
           cp -v ../${PKGNAME}_*_${ARCH}.deb out/
           ls -la out
 
-      - name: Import signing key (base64)
+      - name: Upload artifact (debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ env.SUITE }}-${{ env.PKGNAME }}-${{ env.DEBVER }}
+          path: out/*.deb
+
+      - name: Upload to GitHub Release as asset "bookworm/<file>.deb" (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
         env:
-          APT_GPG_PRIVATE_KEY_B64: ${{ secrets.APT_GPG_PRIVATE_KEY_B64 }}
-        run: |
-          mkdir -p ~/.gnupg
-          chmod 700 ~/.gnupg
-
-          if [ -z "$APT_GPG_PRIVATE_KEY_B64" ]; then
-            echo "ERROR: Secret APT_GPG_PRIVATE_KEY_B64 is empty/missing."
-            exit 1
-          fi
-
-          printf '%s' "$APT_GPG_PRIVATE_KEY_B64" | base64 -d | gpg --batch --import
-          KEYID="$(gpg --list-secret-keys --with-colons | awk -F: '/^sec/{print $5; exit}')"
-          if [ -z "$KEYID" ]; then
-            echo "ERROR: No secret key imported."
-            exit 1
-          fi
-          echo "SIGNING_KEYID=$KEYID" >> "$GITHUB_ENV"
-          gpg --list-secret-keys --keyid-format=long
-
-      - name: Build signed APT repo (dists/bookworm/main/...) for Pages
-        env:
-          APT_GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
+          TAG="${GITHUB_REF#refs/tags/}"
+          OWNER_REPO="$GITHUB_REPOSITORY"
 
-          rm -rf public
-          mkdir -p "public/pool/${COMP}"
-          mkdir -p "public/dists/${SUITE}/${COMP}/binary-${ARCH}"
+          DEB_FILE="$(ls -1 out/*.deb | head -n1)"
+          BASE="$(basename "$DEB_FILE")"
+          ASSET_NAME="${SUITE}/${BASE}"   # <-- твоят формат
+          ASSET_LABEL="${SUITE}"          # fallback за агрегатора
 
-          # 1) .deb в pool
-          cp -v out/*.deb "public/pool/${COMP}/"
+          # 1) Ensure release exists (ignore if already exists)
+          curl -fsSL -X POST \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${OWNER_REPO}/releases" \
+            -d "{\"tag_name\":\"${TAG}\",\"name\":\"${TAG}\",\"draft\":false,\"prerelease\":false}" \
+            >/dev/null || true
 
-          # 2) (по желание) публикувай публичния ключ за клиентите
-          # Файлът repo-key.asc трябва да е commit-нат в репото (публичен ключ)
-          if [ -f repo-key.asc ]; then
-            cp -v repo-key.asc public/repo-key.asc
-          fi
+          # 2) Get upload_url
+          REL_JSON="$(curl -fsSL \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${OWNER_REPO}/releases/tags/${TAG}")"
 
-          # 3) Packages + Packages.gz
-          cd public
-          dpkg-scanpackages -m "pool/${COMP}" /dev/null > "dists/${SUITE}/${COMP}/binary-${ARCH}/Packages"
-          gzip -9fk "dists/${SUITE}/${COMP}/binary-${ARCH}/Packages"
+          UPLOAD_URL="$(echo "$REL_JSON" | jq -r '.upload_url' | sed 's/{?name,label}//')"
 
-          # 4) Release за suite
-          cat > apt-ftparchive.conf <<EOF
-          APT::FTPArchive::Release::Origin "Wolfberry";
-          APT::FTPArchive::Release::Label "Wolfberry APT";
-          APT::FTPArchive::Release::Suite "${SUITE}";
-          APT::FTPArchive::Release::Codename "${SUITE}";
-          APT::FTPArchive::Release::Architectures "${ARCH}";
-          APT::FTPArchive::Release::Components "${COMP}";
-          APT::FTPArchive::Release::Description "Wolfberry gqrx repo";
-          EOF
+          # URL-encode name/label
+          NAME_ENC="$(python3 - <<PY
+            import urllib.parse
+            print(urllib.parse.quote("${ASSET_NAME}", safe=""))
+            PY
+            )"
+                      LABEL_ENC="$(python3 - <<PY
+            import urllib.parse
+            print(urllib.parse.quote("${ASSET_LABEL}", safe=""))
+          PY
+          )"
 
-          apt-ftparchive -c apt-ftparchive.conf release "dists/${SUITE}" > "dists/${SUITE}/Release"
-
-          # 5) Подписи: InRelease + Release.gpg
-          gpg --batch --yes --pinentry-mode loopback \
-            --passphrase "$APT_GPG_PASSPHRASE" \
-            --default-key "$SIGNING_KEYID" \
-            --digest-algo SHA256 \
-            --clearsign -o "dists/${SUITE}/InRelease" "dists/${SUITE}/Release"
-
-          gpg --batch --yes --pinentry-mode loopback \
-            --passphrase "$APT_GPG_PASSPHRASE" \
-            --default-key "$SIGNING_KEYID" \
-            --digest-algo SHA256 \
-            -abs -o "dists/${SUITE}/Release.gpg" "dists/${SUITE}/Release"
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-        
+          echo "Uploading asset name=${ASSET_NAME} label=${ASSET_LABEL}"
+          curl -fsSL -X POST \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @"${DEB_FILE}" \
+            "${UPLOAD_URL}?name=${NAME_ENC}&label=${LABEL_ENC}"
