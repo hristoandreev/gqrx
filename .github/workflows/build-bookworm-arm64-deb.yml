@@ -172,4 +172,6 @@ jobs:
         with:
           name: apt-${{ env.SUITE }}-${{ env.ARCH }}
           path: ${{ env.SUITE }}/
+          if-no-files-found: error
           retention-days: 90
+
