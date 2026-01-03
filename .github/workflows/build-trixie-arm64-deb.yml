@@ -21,7 +21,7 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
       DEB_BUILD_OPTIONS: nocheck
       DEBFULLNAME: gqrx-wolfberry
-      DEBEMAIL: noreply@github.com
+      DEBEMAIL: hristoandreev@wolfberry.lz1haa.eu
 
     steps:
       - name: Checkout
@@ -86,8 +86,8 @@ jobs:
           Package: ${PKGNAME}
           Architecture: ${ARCH}
           Depends: \${shlibs:Depends}, \${misc:Depends}
-          Description: gqrx built with Qt6 (arm64, bookworm)
-           Custom build of gqrx with Qt6 for Raspberry Pi OS (Bookworm).
+          Description: gqrx built with Qt6 (arm64, trixie)
+           Custom build of gqrx with Qt6 for Raspberry Pi OS (trixie).
           EOF
 
           cat > debian/rules <<'EOF'
@@ -159,7 +159,7 @@ jobs:
           echo "=== debian/rules (tabs show as ^I) ==="
           sed -n '1,80p' debian/rules | cat -A
 
-      - name: Prepare artifact payload as "bookworm/<deb>.deb"
+      - name: Prepare artifact payload as "trixie/<deb>.deb"
         run: |
           set -e
           rm -rf "${SUITE}"
@@ -167,7 +167,7 @@ jobs:
           cp -v out/*.deb "${SUITE}/"
           ls -la "${SUITE}"
 
-      - name: Upload artifact (apt-bookworm-arm64)
+      - name: Upload artifact (apt-trixie-arm64)
         uses: actions/upload-artifact@v4
         with:
           name: apt-${{ env.SUITE }}-${{ env.ARCH }}
