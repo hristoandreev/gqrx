@@ -41,6 +41,30 @@ jobs:
             libvolk2-dev \
             libpulse-dev
 
+      - name: Build ana install SoapySDR
+        run: |
+          git clone https://github.com/pothosware/SoapySDR.git
+          cd SoapySDR
+          git pull origin master
+          mkdir build
+          cd build
+          cmake ..
+          make -j`nproc`
+          sudo make install -j`nproc`
+          sudo ldconfig #needed on debian systems
+          SoapySDRUtil --info
+
+      - name: Build ana install gr-osmosdr
+        run: |
+          git clone https://gitea.osmocom.org/sdr/gr-osmosdr
+          cd gr-osmosdr/
+          mkdir build
+          cd build/
+          cmake ../
+          make
+          sudo make install
+          sudo ldconfig
+
       - name: Compute CI version (POSIX-safe)
         run: |
           SHORT_SHA="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
@@ -72,7 +96,6 @@ jobs:
            qt6-base-dev,
            qt6-svg-dev,
            gnuradio-dev,
-           libgnuradio-osmosdr-dev,
            libvolk2-dev,
            libpulse-dev
           Standards-Version: 4.6.2
