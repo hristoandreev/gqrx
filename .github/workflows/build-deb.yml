@@ -50,8 +50,8 @@ jobs:
           cd build
           cmake ..
           make -j`nproc`
-          sudo make install -j`nproc`
-          sudo ldconfig #needed on debian systems
+          make install -j`nproc`
+          ldconfig #needed on debian systems
           SoapySDRUtil --info
 
       - name: Build ana install gr-osmosdr
@@ -62,8 +62,8 @@ jobs:
           cd build/
           cmake ../
           make
-          sudo make install
-          sudo ldconfig
+          make install
+          ldconfig
 
       - name: Compute CI version (POSIX-safe)
         run: |
