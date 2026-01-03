@@ -141,5 +141,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: apt-${{ env.SUITE }}-${{ env.ARCH }}
-          path: ${{ env.SUITE }}/*.deb
+          path: ${{ env.SUITE }}/
           retention-days: 90
