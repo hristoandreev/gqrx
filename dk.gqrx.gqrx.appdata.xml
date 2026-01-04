@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop">
+<component type="desktop-application">
   <id>dk.gqrx.gqrx</id>
   <name>Gqrx</name>
   <summary>Software defined radio receiver implemented using GNU Radio and the Qt GUI toolkit</summary>
+  <summary xml:lang="cs">Přijímač na bázi softwarově definovaného rádia implementovaný s použitím GNU Radio a Qt</summary>
+  <summary xml:lang="de">Software defined Radio auf Basis von GNU Radio und dem Qt GUI Toolkit</summary>
   <summary xml:lang="nl">Software defined radio ontvanger geïmplementeerd met GNU Radio en de Qt GUI toolkit</summary>
   <summary xml:lang="ru">Приемник для программно-определенного радио (SDR) использующий GNU Radio и библиотеку Qt</summary>
+  <summary xml:lang="zh_CN">使用 GNU Radio 和 Qt GUI 实现的软件无线电接收器</summary>
   <developer_name>Alexandru Csete</developer_name>
   <developer id="dk.gqrx">
     <name>Alexandru Csete</name>
@@ -28,8 +31,8 @@
   <launchable type="desktop-id">dk.gqrx.gqrx.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <!-- <caption></caption> -->
-      <image width="1850" height="1055">https://raw.githubusercontent.com/gqrx-sdr/gqrx/master/resources/screenshots/gqrx-main.png</image>
+      <image>https://raw.githubusercontent.com/gqrx-sdr/gqrx/master/resources/screenshots/gqrx-main.png</image>
+      <caption>Main Gqrx window</caption>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1" />
