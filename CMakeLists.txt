@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Project name
-project(gqrx)
+project(gqrx-wolfberry)
 set(${PROJECT_NAME}_MAJOR "2")
 set(${PROJECT_NAME}_MINOR "17")
 set(${PROJECT_NAME}_PATCH "7")
