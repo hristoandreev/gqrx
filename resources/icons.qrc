@@ -27,5 +27,8 @@
         <file>icons/modeFM.svg</file>
         <file>icons/modeSSB.svg</file>
         <file>icons/modeOFF.svg</file>
+        <file>icons/S-Meter.svg</file>
+        <file>icons/S-Meter_2.svg</file>
+        <file>icons/S-Meter_3.svg</file>
     </qresource>
 </RCC>

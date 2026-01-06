@@ -158,7 +158,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
     widget = new QWidget(ui->frame);
     widget->setObjectName("widget");
-    widget->setGeometry(QRect(420, 10, 1160, 50));
+    widget->setGeometry(QRect(500, 10, 1160, 50));
     horizontalLayoutMode = new QHBoxLayout(widget);
     horizontalLayoutMode->setSpacing(6);
     horizontalLayoutMode->setContentsMargins(11, 11, 11, 11);
