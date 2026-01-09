@@ -7,3 +7,10 @@
 /Gqrx.app/
 .idea/
 cmake-build*/
+CMakeFiles/
+.qtc_clangd/
+.qtc/
+.qt/
+.cmake/
+Testing/
+CMakeLists.txt.user

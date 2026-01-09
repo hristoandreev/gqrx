@@ -158,8 +158,9 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
     widget = new QWidget(ui->frame);
     widget->setObjectName("widget");
-    widget->setGeometry(QRect(500, 10, 1160, 50));
+    widget->setGeometry(QRect(510, 10, 1160, 50));
     horizontalLayoutMode = new QHBoxLayout(widget);
+    horizontalLayoutMode->setSizeConstraint(QLayout::SetMinimumSize);
     horizontalLayoutMode->setSpacing(6);
     horizontalLayoutMode->setContentsMargins(11, 11, 11, 11);
     horizontalLayoutMode->setObjectName("horizontalLayoutMode");
@@ -481,7 +482,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     connect(rds_timer, SIGNAL(timeout()), this, SLOT(rdsTimeout()));
 
     // enable frequency tooltips on FFT plot
-    ui->plotter->setTooltipsEnabled(true);
+    //ui->plotter->setTooltipsEnabled(true);
 
     // Create list of input devices. This must be done before the configuration is
     // restored because device probing might change the device configuration
@@ -491,22 +492,22 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
     connect(m_recent_config, SIGNAL(loadConfig(const QString &)), this, SLOT(loadConfigSlot(const QString &)));
 
     // restore last session
-    if (!loadConfig(cfgfile, true, true))
-    {
-
-      // first time config
-        qDebug() << "Launching I/O device editor";
-        if (firstTimeConfig() != QDialog::Accepted)
-        {
-            qDebug() << "I/O device configuration cancelled.";
-            configOk = false;
-        }
-        else
-        {
-            configOk = true;
-        }
-    }
-    else if (edit_conf)
+    // if (!loadConfig(cfgfile, true, true))
+    // {
+    //
+    //   // first time config
+    //     qDebug() << "Launching I/O device editor";
+    //     if (firstTimeConfig() != QDialog::Accepted)
+    //     {
+    //         qDebug() << "I/O device configuration cancelled.";
+    //         configOk = false;
+    //     }
+    //     else
+    //     {
+    //         configOk = true;
+    //     }
+    // }
+    // else if (edit_conf)
     {
         qDebug() << "Launching I/O device editor";
         if (on_actionIoConfig_triggered() != QDialog::Accepted)
@@ -522,6 +523,7 @@ MainWindow::MainWindow(const QString& cfgfile, bool edit_conf, QWidget *parent) 
 
     qsvg_dummy = new QSvgWidget();
 
+    ui->freqCtrl->setBgColor(QColor(0, 0, 0, 255));
     ui->freqCtrl->setDigitColor(QColor(0, 255, 0, 255));
 
     systemMonitor->startMonitoring();
